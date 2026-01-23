@@ -1,9 +1,10 @@
    Hey gorlll I'm Dickie
    What can I do for you?
    okie, I've added the task:
-     [T][ ] todo borrow book
+     [T][ ] borrow book
    you now have 1 tasks in your list.
-   1. [T][ ] todo borrow book
+   no task indicated to do!
+   1. [T][ ] borrow book
    okie, I've added the task:
      [D][ ] deadline return book (by: Sunday)
    you now have 2 tasks in your list.
@@ -14,9 +15,8 @@
    try again! use "/from" and "/to" to indicate the duration of the event!
    try again! use "/from" and "/to" to indicate the duration of the event!
    try again! use "/from" and "/to" to indicate the duration of the event!
-   good job! I've marked [task: [T][X] todo borrow book] as DONE
+   good job! I've marked [task: [T][X] borrow book] as DONE
    invalid task number: mark or unmark, try again!
-   aite, I've unmarked [task: [T][ ] todo borrow book]
+   aite, I've unmarked [task: [T][ ] borrow book]
    invalid task number: mark or unmark, try again!
    Byee. See ya~
-
