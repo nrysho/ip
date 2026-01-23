@@ -1,0 +1,13 @@
+todo borrow book
+list
+deadline return book /by Sunday
+deadline this should fail /by
+event project meeting /from Mon 2pm /to 4pm
+event 2103 lecture
+event 2106 lecture /from Mon 7am
+event 2109 lecture /to Friday 12am
+mark 1
+mark -1
+unmark 1
+unmark -1
+bye
