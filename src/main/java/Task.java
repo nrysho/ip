@@ -24,6 +24,4 @@ public class Task {
         this.isDone = false;
         System.out.println("aite, I've unmarked " + "[task: " + this.toString() + "]");
     }
-
-    //...
 }
