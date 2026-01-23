@@ -1,5 +1,6 @@
 todo borrow book
 todo
+
 list
 deadline return book /by Sunday
 deadline this should fail /by
@@ -11,4 +12,6 @@ mark 1
 mark -1
 unmark 1
 unmark -1
+delete 1
+delete -1
 bye

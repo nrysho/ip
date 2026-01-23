@@ -3,7 +3,8 @@
    okie, I've added the task:
      [T][ ] borrow book
    you now have 1 tasks in your list.
-   no task indicated to do!
+   try again, no task indicated to do!
+   empty input :( let me know how I can help!
    1. [T][ ] borrow book
    okie, I've added the task:
      [D][ ] deadline return book (by: Sunday)
@@ -16,7 +17,10 @@
    try again! use "/from" and "/to" to indicate the duration of the event!
    try again! use "/from" and "/to" to indicate the duration of the event!
    good job! I've marked [task: [T][X] borrow book] as DONE
-   invalid task number: mark or unmark, try again!
+   invalid task number, try again!
    aite, I've unmarked [task: [T][ ] borrow book]
-   invalid task number: mark or unmark, try again!
+   invalid task number, try again!
+   got it, deleted task: [[T][ ] borrow book]!
+   you now have 2 tasks in your list.
+   invalid task number, try again!
    Byee. See ya~
