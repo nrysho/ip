@@ -46,9 +46,6 @@ public class TaskList {
      */
     public void addTask(Task task){
         taskList.add(task);
-        System.out.println("   okie, I've added the task:\n" +
-                "     " + task.toString() +
-                "\n   you now have " + taskList.size() + " tasks in your list.");
     }
 
     /**

@@ -4,6 +4,7 @@ import exception.DickieException;
 import task.*;
 import utils.Storage;
 import utils.TaskList;
+import utils.Ui;
 
 import java.io.File;
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.*;
 public class Dickie {
     public static void main(String[] args) {
         Storage storage = new Storage("./data/dickie.txt");
+        Ui ui = new Ui();
 
         // Load tasks from file on startup
         ArrayList<Task> loadedTasks = storage.load();
@@ -22,33 +24,34 @@ public class Dickie {
         // put loaded tasks into a taskList object
         TaskList taskList = new TaskList(loadedTasks);
 
-        greet();
-        Scanner scanner = new Scanner(System.in);
+        ui.showGreeting();
 
         while (true) {
-            String input = scanner.nextLine();
+            String input = ui.readCommand();
             if (input.equals("bye")) {
                 break;
             }
 
             try {
-                handleInput(input, taskList, storage);
+                handleInput(input, taskList, ui);
             } catch (DickieException e) {
-                System.out.println(e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
 
         storage.save(taskList);
-        bye();
+        ui.showGoodbye();
     }
 
     /**
      * Processes the user input and executes the corresponding command.
      *
      * @param input Full user input string
+     * @param taskList Tasklist object with full task list
+     * @param ui Ui object to handle displayed messages
      * @throws DickieException If the input is invalid or cannot be parsed
      */
-    public static void handleInput(String input, TaskList taskList, Storage storage) throws DickieException {
+    public static void handleInput(String input, TaskList taskList, Ui ui) throws DickieException {
         CommandType commandType = CommandParser.getInputCommandType(input, taskList.getSize());
         String[] splitInput = CommandParser.splitInput(input);
 
@@ -66,7 +69,7 @@ public class Dickie {
                 taskList.delete(splitInput[1]);
                 break;
             case ADDTASK:
-                handleAddTask(input, splitInput, taskList, storage);
+                handleAddTask(input, splitInput, taskList, ui);
                 break;
             case FIND:
                 taskList.find(splitInput[1]);
@@ -81,10 +84,11 @@ public class Dickie {
      *
      * @param input Full user input string
      * @param splitInput User input split into individual words
+     * @param ui Ui object to display messages
      * @throws DickieException If the task type or task details are invalid
      */
     public static void handleAddTask(String input, String[] splitInput, TaskList taskList,
-                                     Storage storage) throws DickieException {
+                                     Ui ui) throws DickieException {
         TaskType taskType = CommandParser.getTaskType(splitInput);
         Task newTask;
 
@@ -103,6 +107,7 @@ public class Dickie {
         }
 
         taskList.addTask(newTask);
+        ui.showTaskAdded(newTask, taskList.getSize());
     }
 
     /**
@@ -140,23 +145,4 @@ public class Dickie {
         String[] details = CommandParser.getEventDetails(input);
         return new Event(details[0], details[1], details[2]);
     }
-
-    /**
-     * Prints the greeting message when the program starts.
-     */
-    public static void greet() {
-            String greeting = "   Hey gorlll I'm Dickie\n" +
-                    "   What can I do for you?";
-            System.out.println(greeting);
-        }
-
-    /**
-     * Prints the farewell message when the program ends.
-     */
-    public static void bye() {
-        String greeting = "   Byee. See ya~";
-        System.out.println(greeting);
-    }
-
-
 }

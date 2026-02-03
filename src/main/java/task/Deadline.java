@@ -17,12 +17,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
-        try {
-            LocalDate byAsDate = LocalDate.parse(by);
-            this.by = byAsDate.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
-        } catch (java.time.format.DateTimeParseException e) {
-            System.out.println("try again! deadline should be formatted in YYYY-MM-DD format");
-        }
+        this.by = by.trim();
     }
 
     /**
@@ -34,8 +29,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by, boolean isDone) {
         super(description, isDone);
-        LocalDate byAsDate = LocalDate.parse(by);
-        this.by = byAsDate.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+        this.by = by.trim();
         this.isDone = isDone;
     }
 
@@ -46,7 +40,8 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.getStatusIcon() + " " + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.getStatusIcon() + " " + super.toString() + " (by: " +
+                LocalDate.parse(by).format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ")";
     }
 
     @Override
@@ -54,7 +49,7 @@ public class Deadline extends Task {
         // Format: "D | X | task detail | Monday 2359"
         return String.format("D | %s | %s | %s",
                 getFileStatusIcon(),
-                description,
-                by);
+                description.trim(),
+                by.trim());
     }
 }
