@@ -1,16 +1,17 @@
-import command.CommandType;
-import command.CommandParser;
-import exception.DickieException;
-import task.*;
-import utils.Storage;
-import utils.TaskList;
-import utils.Ui;
+package dickie;
 
-import java.io.File;
+import dickie.command.CommandType;
+import dickie.command.CommandParser;
+import dickie.exception.DickieException;
+import dickie.task.*;
+import dickie.utils.Storage;
+import dickie.utils.TaskList;
+import dickie.utils.Ui;
+
 import java.util.*;
 
 /**
- * Entry point of the Dickie task management application
+ * Entry point of the dickie.Dickie task management application
  * Handles user input and coordinates command execution
  */
 public class Dickie {

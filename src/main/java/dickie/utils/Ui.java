@@ -1,6 +1,6 @@
-package utils;
+package dickie.utils;
 
-import task.Task;
+import dickie.task.Task;
 
 import java.util.Scanner;
 
@@ -29,7 +29,7 @@ public class Ui {
      * Prints the greeting message when the program starts.
      */
     public void showGreeting() {
-        String greeting = "   Hey gorlll I'm Dickie\n" +
+        String greeting = "   Hey gorlll I'm dickie.Dickie\n" +
                 "   What can I do for you?";
         System.out.println(greeting);
     }

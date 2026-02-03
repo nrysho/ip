@@ -1,4 +1,4 @@
-package task;
+package dickie.task;
 
 /**
  * Represents a task that occurs over a specific time period

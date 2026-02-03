@@ -1,7 +1,7 @@
-package command;
+package dickie.command;
 
-import exception.DickieException;
-import task.TaskType;
+import dickie.exception.DickieException;
+import dickie.task.TaskType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;

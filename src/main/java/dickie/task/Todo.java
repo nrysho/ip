@@ -1,4 +1,4 @@
-package task;
+package dickie.task;
 
 /**
  * Represents a todo task without any date or time constraints

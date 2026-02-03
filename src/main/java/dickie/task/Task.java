@@ -1,4 +1,4 @@
-package task;
+package dickie.task;
 
 /**
  * Represents a generic task with a description and completion status

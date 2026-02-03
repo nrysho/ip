@@ -1,4 +1,4 @@
-package task;
+package dickie.task;
 
 /**
  * Represents the different types of tasks supported by the application

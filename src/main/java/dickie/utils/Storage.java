@@ -1,16 +1,15 @@
-package utils;
-import exception.DickieException;
-import task.Deadline;
-import task.Event;
-import task.Task;
-import task.Todo;
+package dickie.utils;
+import dickie.exception.DickieException;
+import dickie.task.Deadline;
+import dickie.task.Event;
+import dickie.task.Task;
+import dickie.task.Todo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -18,12 +17,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Handles all file I/O operations for the Dickie application.
+ * Handles all file I/O operations for the dickie.Dickie application.
  * Responsible for loading tasks from disk on startup and saving tasks to disk
  * when they are modified.
  */
 public class Storage {
-    private static final String DEFAULT_FILE_PATH = "./data/Dickie.txt";
+    private static final String DEFAULT_FILE_PATH = "./data/dickie.Dickie.txt";
     private final String filePath;
     private ArrayList<Task> tasks;  // Store tasks in Storage
 

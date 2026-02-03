@@ -1,6 +1,6 @@
-package utils;
+package dickie.utils;
 
-import task.Task;
+import dickie.task.Task;
 import java.util.ArrayList;
 
 /**

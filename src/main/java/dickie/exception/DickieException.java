@@ -1,4 +1,4 @@
-package exception;
+package dickie.exception;
 
 /**
  * Represents a custom exception used to signal invalid user input or command errors
