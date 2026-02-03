@@ -3,6 +3,9 @@ package command;
 import exception.DickieException;
 import task.TaskType;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 
 /**
  * Includes methods to parse input commands
@@ -71,8 +74,12 @@ public class CommandParser {
         if (!input.matches(".*\\s" + "/by" + "\\s.*") || taskDeadline.isBlank()) {
             throw new DickieException("   try again! use \"/by\" to indicate the deadline of this task!");
         }
-
-        String taskName = input.substring(0, byIndex).trim();
+        try {
+            LocalDate.parse(taskDeadline);
+        } catch (DateTimeParseException e) {
+            throw new DickieException("   try again! Deadline must be in YYYY-MM-DD format!");
+        }
+        String taskName = input.substring(9, byIndex).trim();
 
         return new String[]{taskName, taskDeadline};
     }

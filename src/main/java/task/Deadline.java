@@ -1,5 +1,8 @@
 package task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task that must be completed by a specific deadline
  */
@@ -14,7 +17,12 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
-        this.by = by;
+        try {
+            LocalDate byAsDate = LocalDate.parse(by);
+            this.by = byAsDate.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("try again! deadline should be formatted in YYYY-MM-DD format");
+        }
     }
 
     /**
@@ -26,7 +34,8 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by, boolean isDone) {
         super(description, isDone);
-        this.by = by;
+        LocalDate byAsDate = LocalDate.parse(by);
+        this.by = byAsDate.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
         this.isDone = isDone;
     }
 
