@@ -29,7 +29,7 @@ public class Ui {
      * Prints the greeting message when the program starts.
      */
     public void showGreeting() {
-        String greeting = "   Hey gorlll I'm dickie.Dickie\n" +
+        String greeting = "   Hey gorlll I'm dickie\n" +
                 "   What can I do for you?";
         System.out.println(greeting);
     }
