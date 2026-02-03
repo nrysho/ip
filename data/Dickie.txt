@@ -1,8 +1,2 @@
-T |   |   djfhkds
-D |   |   deadline dsfjldkj   |   dkskfjdl
-E |   |   event dkjkjsf   |   djfhdsfj   |   sjfkfhd
-T |   |  egg
-T |   |  egg2
-T |   |  egg list
-D |   | deadline egg | 2pm
-E | X | event egg run | 2pm | 5pm
+T |   |  123
+D | X | egg | Dec 12 2024
