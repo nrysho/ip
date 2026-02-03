@@ -119,6 +119,9 @@ public class CommandParser {
         if (input.equals("list")) {
             return CommandType.LIST;
         }
+        if (splitInput[0].equals("find")) {
+            return CommandType.FIND;
+        }
         if (splitInput.length == 2 && isNumeric(splitInput[1])
             && (splitInput[0].equals("mark") ||
                 splitInput[0].equals("unmark") ||

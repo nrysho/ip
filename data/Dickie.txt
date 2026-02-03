@@ -1,3 +1,8 @@
-T | X | djfhkds
-D |   | deadline dsfjldkj | dkskfjdl
-E | X | event dkjkjsf | djfhdsfj | sjfkfhd
+T |   |   djfhkds
+D |   |   deadline dsfjldkj   |   dkskfjdl
+E |   |   event dkjkjsf   |   djfhdsfj   |   sjfkfhd
+T |   |  egg
+T |   |  egg2
+T |   |  egg list
+D |   | deadline egg | 2pm
+E | X | event egg run | 2pm | 5pm

@@ -6,5 +6,5 @@ package command;
  */
 public enum CommandType {
     // VOID is the case where the message length is 0
-    LIST, MARK, UNMARK, ADDTASK, DELETE;
+    LIST, MARK, UNMARK, ADDTASK, DELETE, FIND;
 }

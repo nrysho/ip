@@ -68,6 +68,9 @@ public class Dickie {
             case ADDTASK:
                 handleAddTask(input, splitInput, taskList, storage);
                 break;
+            case FIND:
+                taskList.find(splitInput[1]);
+                break;
             default:
                 throw new DickieException("   unknown command!");
         }

@@ -93,4 +93,26 @@ public class TaskList {
     public ArrayList<Task> getTasks() {
         return this.taskList;
     }
+
+    public void find(String keyword) {
+        boolean isFound = false;
+        int count = 0;
+        for (Task task: taskList) {
+            String description = task.getDescription();
+            String[] splitDescription = description.split(" ");
+            for (String word: splitDescription) {
+                if (word.equals(keyword)) {
+                    if (!isFound) {
+                        System.out.println("   Here are the matching tasks in your list:");
+                        count++;
+                        System.out.println("    " + count + ". " + task.toString());
+                        isFound = true;
+                    } else {
+                        count++;
+                        System.out.println("    " + count + ". " + task.toString());
+                    }
+                }
+            }
+        }
+    }
 }

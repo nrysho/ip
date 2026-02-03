@@ -19,6 +19,7 @@ public class Task {
 
     /**
      * Creates a new task with the given description and specified isDone
+     * Is overloaded in all child classes
      *
      * @param description Description of the task
      * @param isDone Boolean of whether the task is done or not
@@ -26,6 +27,15 @@ public class Task {
     public Task(String description, boolean isDone) {
         this.description = description;
         this.isDone = isDone;
+    }
+
+    /**
+     * Returns description of Task
+     *
+     * @return task description
+     */
+    public String getDescription() {
+        return this.description;
     }
 
     /**
