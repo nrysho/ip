@@ -17,7 +17,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
-        this.by = by.trim();
+        this.by = by;
     }
 
     /**
@@ -29,7 +29,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by, boolean isDone) {
         super(description, isDone);
-        this.by = by.trim();
+        this.by = by;
         this.isDone = isDone;
     }
 
@@ -49,7 +49,7 @@ public class Deadline extends Task {
         // Format: "D | X | task detail | Monday 2359"
         return String.format("D | %s | %s | %s",
                 getFileStatusIcon(),
-                description.trim(),
-                by.trim());
+                description,
+                by);
     }
 }

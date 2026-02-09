@@ -1,10 +1,11 @@
 package dickie.command;
 
 import dickie.exception.DickieException;
-import dickie.task.TaskType;
+import dickie.task.*;
+import dickie.utils.TaskList;
+import dickie.utils.Ui;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 
 /**
@@ -22,89 +23,43 @@ public class CommandParser {
     }
 
     /**
-     * Returns the details of a todo task.
-     * If the input is "todo" with no task, throws DickieException with error message.
-     *
-     * @param message String message input by user
-     * @return Details of todo task
-     * @throws DickieException If details of todo task not specified
-     */
-    public static String getTodoDetails(String message) throws DickieException {
-        String details = message.substring(4).trim();
-        if (details.isBlank()) {
-            throw new DickieException("   try again, no task indicated to do!");
-        }
-        return details;
-    }
-
-    /**
-     * Returns the TaskType of an input.
-     * If the input does not start with "todo", "deadline" or "event",
-     * throws DickieException with error message.
-     *
-     * @param splitInput String array of input split by words
-     * @return The type of task specified by the user input
-     * @throws DickieException If task does not start with "todo", "deadline" or "event"
-     */
-    public static TaskType getTaskType(String[] splitInput) throws DickieException {
-        String taskName = splitInput[0];
-        if (taskName.equals("todo")) {
-            return TaskType.TODO;
-        } else if (taskName.equals("deadline")) {
-            return TaskType.DEADLINE;
-        } else if (taskName.equals("event")) {
-            return TaskType.EVENT;
-        } else {
-            throw new DickieException("   invalid task type, try again! :)");
-        }
-    }
-
-    /**
-     * Extracts the task name and deadline from a deadline command.
-     * The deadline must be specified using the "/by" keyword.
+     * Processes the user input and executes the corresponding command.
      *
      * @param input Full user input string
-     * @return String array containing the task name and deadline
-     * @throws DickieException If "/by" is missing or no deadline is provided
+     * @param taskList Tasklist object with full task list
+     * @param ui Ui object to handle displayed messages
+     * @throws DickieException If the input is invalid or cannot be parsed
      */
-    public static String[] getDeadlineDetails(String input) throws DickieException {
-        int byIndex = input.indexOf("/by");
-        String taskDeadline = input.substring(byIndex + 3).trim();
-        // if substring " /by " does not exist, or if there are no words after "/by", throw exception
-        if (!input.matches(".*\\s" + "/by" + "\\s.*") || taskDeadline.isBlank()) {
-            throw new DickieException("   try again! use \"/by\" to indicate the deadline of this task!");
-        }
-        try {
-            LocalDate.parse(taskDeadline);
-        } catch (DateTimeParseException e) {
-            throw new DickieException("   try again! Deadline must be in YYYY-MM-DD format!");
-        }
-        String taskName = input.substring(9, byIndex).trim();
+    public static void handleInput(String input, TaskList taskList, Ui ui) throws DickieException {
+        CommandType commandType = CommandParser.getInputCommandType(input, taskList.getSize());
+        String[] splitInput = CommandParser.splitInput(input);
 
-        return new String[]{taskName, taskDeadline};
-    }
-
-    /**
-     * Extracts the task name, start time, and end time from an event command.
-     * The duration must be specified using the "/from" and "/to" keywords.
-     *
-     * @param input Full user input string
-     * @return String array containing the task name, start time, and end time
-     * @throws DickieException If "/from" or "/to" is missing from the input
-     */
-    public static String[] getEventDetails(String input) throws DickieException {
-        // if substring " /from " or " /to " does not exist, throw exception
-        if (!input.matches(".*\\s" + "/from" + "\\s.*") ||
-                !input.matches(".*\\s" + "/to" + "\\s.*")) {
-            throw new DickieException("   try again! use \"/from\" and \"/to\" to indicate the duration of the event!");
+        switch (commandType) {
+            case LIST:
+                ui.listTasks(taskList);
+                break;
+            case MARK:
+                Task markedTask = taskList.mark(splitInput[1]);
+                ui.showTaskMarked(markedTask.toString());
+                break;
+            case UNMARK:
+                Task unmarkedTask = taskList.unmark(splitInput[1]);
+                ui.showTaskUnmarked(unmarkedTask.toString());
+                break;
+            case DELETE:
+                Task deletedTask = taskList.delete(splitInput[1]);
+                ui.showTaskDeleted(deletedTask.toString(), taskList.getSize());
+                break;
+            case FIND:
+                ArrayList<Task> foundTasks = taskList.find(splitInput[1]);
+                ui.showFoundTasks(foundTasks);
+                break;
+            case ADDTASK:
+                handleAddTask(input, splitInput, taskList, ui);
+                break;
+            default:
+                throw new DickieException("   unknown command!");
         }
-        int fromIndex = input.indexOf("/from");
-        int toIndex = input.indexOf("/to");
-        String taskName = input.substring(0, fromIndex).trim();
-        String from = input.substring(fromIndex + 5, toIndex).trim();
-        String to = input.substring(toIndex + 3).trim();
-
-        return new String[]{taskName, from, to};
     }
 
     /**
@@ -130,7 +85,7 @@ public class CommandParser {
             return CommandType.FIND;
         }
         if (splitInput.length == 2 && isNumeric(splitInput[1])
-            && (splitInput[0].equals("mark") ||
+                && (splitInput[0].equals("mark") ||
                 splitInput[0].equals("unmark") ||
                 splitInput[0].equals("delete"))) {
             int num = Integer.parseInt(splitInput[1]);
@@ -159,10 +114,50 @@ public class CommandParser {
             return false;
         }
         try {
-            Double.parseDouble(input);
+            Integer.parseInt(input);
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    /**
+     * Handles the creation and addition of a new task based on the user input.
+     *
+     * @param input Full user input string
+     * @param splitInput User input split into individual words
+     * @param ui Ui object to display messages
+     * @throws DickieException If the task type or task details are invalid
+     */
+    public static void handleAddTask(String input, String[] splitInput, TaskList taskList,
+                                     Ui ui) throws DickieException {
+        TaskType taskType = CommandParser.getTaskType(splitInput);
+        Task newTask = switch (taskType) {
+            case TODO -> TaskFactory.createTodo(input);
+            case DEADLINE -> TaskFactory.createDeadline(input);
+            case EVENT -> TaskFactory.createEvent(input);
+        };
+
+        taskList.addTask(newTask);
+        ui.showTaskAdded(newTask, taskList.getSize());
+    }
+
+    /**
+     * Returns the TaskType of an input.
+     * If the input does not start with "todo", "deadline" or "event",
+     * throws DickieException with error message.
+     *
+     * @param splitInput String array of input split by words
+     * @return The type of task specified by the user input
+     * @throws DickieException If task does not start with "todo", "deadline" or "event"
+     */
+    public static TaskType getTaskType(String[] splitInput) throws DickieException {
+        String taskName = splitInput[0];
+        return switch (taskName) {
+            case "todo" -> TaskType.TODO;
+            case "deadline" -> TaskType.DEADLINE;
+            case "event" -> TaskType.EVENT;
+            default -> throw new DickieException("   invalid task type, try again! :)");
+        };
     }
 }

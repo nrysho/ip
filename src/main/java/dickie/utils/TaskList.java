@@ -20,17 +20,6 @@ public class TaskList {
     }
 
     /**
-     * Displays all tasks currently stored in the task list.
-     */
-    public void list() {
-        int number = 1;
-        for (Task task : taskList) {
-            System.out.println("   " + number + ". " + task.toString());
-            number++;
-        }
-    }
-
-    /**
      * Returns number of tasks in the task list
      *
      * @return size of tasklist
@@ -52,11 +41,14 @@ public class TaskList {
      * Marks a task as done based on the given task number.
      *
      * @param taskNumber Task number provided by the user
+     *
+     * @return Task that has been marked
      */
-    public void mark(String taskNumber){
+    public Task mark(String taskNumber){
         int taskPos = Integer.parseInt(taskNumber) - 1; // zero based indexing
         Task taskToMark = taskList.get(taskPos);
         taskToMark.mark();
+        return taskToMark;
     }
 
     /**
@@ -64,10 +56,11 @@ public class TaskList {
      *
      * @param taskNumber Task number provided by the user
      */
-    public void unmark(String taskNumber){
+    public Task unmark(String taskNumber){
         int taskPos = Integer.parseInt(taskNumber) - 1; // zero based indexing
         Task taskToUnmark = taskList.get(taskPos);
         taskToUnmark.unmark();
+        return taskToUnmark;
     }
 
     /**
@@ -75,11 +68,10 @@ public class TaskList {
      *
      * @param taskNumber Task number provided by the user
      */
-    public void delete(String taskNumber) {
+    public Task delete(String taskNumber) {
         int taskPos = Integer.parseInt(taskNumber) - 1; // zero based indexing
         Task removedTask = taskList.remove(taskPos);
-        System.out.println("   got it, deleted task: [" + removedTask.toString() + "]!"
-                + "\n   you now have " + taskList.size() + " tasks in your list.");
+        return removedTask;
     }
 
     /**
@@ -91,25 +83,18 @@ public class TaskList {
         return this.taskList;
     }
 
-    public void find(String keyword) {
-        boolean isFound = false;
-        int count = 0;
+    public ArrayList<Task> find(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task: taskList) {
             String description = task.getDescription();
             String[] splitDescription = description.split(" ");
             for (String word: splitDescription) {
                 if (word.equals(keyword)) {
-                    if (!isFound) {
-                        System.out.println("   Here are the matching tasks in your list:");
-                        count++;
-                        System.out.println("    " + count + ". " + task.toString());
-                        isFound = true;
-                    } else {
-                        count++;
-                        System.out.println("    " + count + ". " + task.toString());
-                    }
+                    matchingTasks.add(task);
+                    break;
                 }
             }
         }
+        return matchingTasks;
     }
 }

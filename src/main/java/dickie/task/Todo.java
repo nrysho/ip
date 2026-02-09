@@ -45,6 +45,6 @@ public class Todo extends Task {
         // Format: "T | X | task detail"
         return String.format("T | %s | %s",
                 getFileStatusIcon(),
-                description.trim());
+                description);
     }
 }

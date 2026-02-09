@@ -17,43 +17,61 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Handles all file I/O operations for the dickie.Dickie application.
+ * Handles all file I/O operations for the dickie application.
  * Responsible for loading tasks from disk on startup and saving tasks to disk
  * when they are modified.
  */
 public class Storage {
-    private static final String DEFAULT_FILE_PATH = "./data/dickie.Dickie.txt";
     private final String filePath;
     private ArrayList<Task> tasks;  // Store tasks in Storage
 
     /**
      * Creates a Storage instance with the specified file path.
-     * If the provided file path is null or empty, uses the default path.
      *
      * @param filePath The path to the data file
      */
     public Storage(String filePath) {
-        this.filePath = (filePath != null && !filePath.isEmpty()) ? filePath : DEFAULT_FILE_PATH;
+        this.filePath = filePath; // Trust that this filePath will be valid since it's hardcoded to be
+                                  // ./data/dickie.txt
         this.tasks = new ArrayList<>();
     }
 
+    public boolean ensureFileExists(Path path) {
+        try {
+            if (!Files.exists(path)) {
+                Files.createFile(Paths.get(filePath));
+                return false; // if file did not exist before
+            } else {
+                return true; // if file existed before
+            }
+        } catch (IOException e) {
+            System.out.println("error at Storage::ensureFileExists(Path) method: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
-     * Load tasks from file when chatbot starts
+     * Load tasks from file specified in filePath when chatbot starts
      *
-     * @return ArrayList containing all loaded tasks, or empty list if file doesn't exist
+     * @return ArrayList containing all tasks in file in filePath, or empty list if file doesn't exist
      */
     public ArrayList<Task> load() {
         tasks = new ArrayList<>();
-        File file = new File(filePath);
 
-        // If file doesn't exist, return empty list (normal startup)
-        if (!file.exists()) {
-            System.out.println("No existing data file found. Starting fresh.");
+        // Check if file path exists, and file exists in filePath
+        Path path = Paths.get(filePath);
+        // Check if parent directory exists. If not, create new directory.
+        ensureFileDirectoryExists(path);
+        // If file does not exist yet, create path
+        boolean existed = ensureFileExists(path);
+
+        // If new file was created, return empty arraylist
+        if (!existed) {
             return tasks;
         }
 
         // Try to read the file
-        try (Scanner s = new Scanner(file)) {
+        try (Scanner s = new Scanner(new File(filePath))) {
             while (s.hasNextLine()) {
                 try {
                     String nextLine = s.nextLine().trim();
@@ -79,6 +97,22 @@ public class Storage {
     }
 
     /**
+     * Checks if data directory to file path exists
+     * Creates necessary parent directories if they don't exist
+     */
+    private void ensureFileDirectoryExists(Path path) {
+        try {
+            Path parent = path.getParent(); // returns null if no parent. path should return ./data
+            if (parent != null && !Files.exists(parent)) { // if path has parent, and it does not exist yet,
+                                                           // create parent directories
+                Files.createDirectories(parent);
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating directory: " + e.getMessage());
+        }
+    }
+
+    /**
      * Parses a single line from the data file into a Task object.
      * Expected formats:
      * - Todo: "T | X | description"
@@ -90,15 +124,16 @@ public class Storage {
      * @throws DickieException If the file string has invalid format or unknown task type
      */
     public static Task parseTask(String fileString) throws DickieException {
-        String[] splitString = fileString.split("\\|");
+        String[] splitString = fileString.split(" \\| ");
         String taskType = splitString[0].trim();
+        String description = splitString[2].trim();
         boolean marked = Objects.equals(splitString[1], "X");
 
         return switch (taskType) {
-            case "T" -> new Todo(splitString[2], marked);
-            case "D" -> new Deadline(splitString[2], splitString[3], marked);
-            case "E" -> new Event(splitString[2], splitString[3], splitString[4], marked);
-            default -> throw new DickieException("Error when parsing file");
+            case "T" -> new Todo(description, marked);
+            case "D" -> new Deadline(description, splitString[3].trim(), marked);
+            case "E" -> new Event(description, splitString[3].trim(), splitString[4].trim(), marked);
+            default -> throw new DickieException("Error in when parsing file: Invalid task type.");
         };
     }
 
@@ -120,9 +155,6 @@ public class Storage {
      */
     private void saveTasksToFile(ArrayList<Task> tasks) {
         try {
-            // Ensure directory exists
-            ensureDataDirectoryExists();
-
             FileWriter writer = new FileWriter(filePath);
 
             for (Task task : tasks) {
@@ -136,20 +168,5 @@ public class Storage {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
-
-    /**
-     * Ensure data directory exists before writing
-     * Creates the directory and any necessary parent directories if they don't exist
-     */
-    private void ensureDataDirectoryExists() {
-        try {
-            Path path = Paths.get(filePath);
-            Path parent = path.getParent();
-            if (parent != null && !Files.exists(parent)) {
-                Files.createDirectories(parent);
-            }
-        } catch (IOException e) {
-            System.out.println("Error creating directory: " + e.getMessage());
-        }
-    }
 }
+

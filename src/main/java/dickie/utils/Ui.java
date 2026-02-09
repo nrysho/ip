@@ -2,27 +2,48 @@ package dickie.utils;
 
 import dickie.task.Task;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ui {
-    private final Scanner scanner = new Scanner(System.in);
-
-    public String readCommand() {
-        return scanner.nextLine();
-    }
-
-    public void showError(String message) {
-        System.out.println(message);
-    }
-
     public void showTaskAdded(Task task, int size) {
         System.out.println("   okie, I've added the task:\n" +
                            "     " + task.toString() +
                            "\n   you now have " + size + " tasks in your list.");
     }
 
-    public void showLoadingError() {
-        System.out.println("Error loading saved tasks.");
+    public void showTaskMarked(String task) {
+        System.out.println("   good job! I've marked " + "[task: " +  task + "] as DONE");
+    }
+
+    public void showTaskUnmarked(String task) {
+        System.out.println("   aite, I've unmarked " + "[task: " + task + "]");
+    }
+
+    public void showTaskDeleted(String task, int taskListSize) {
+        System.out.println("   got it, deleted task: [" + task + "]!"
+                + "\n   you now have " + taskListSize + " tasks in your list.");
+    }
+
+    public void showFoundTasks(ArrayList<Task> foundTasks) {
+        System.out.println("   Here are the matching tasks in your list:");
+        int idx = 1;
+        for (Task task: foundTasks) {
+            System.out.println("    " + idx + ". " + task.toString());
+            idx++;
+        }
+    }
+
+    /**
+     * Displays all tasks currently stored in the task list.
+     */
+    public void listTasks(TaskList taskList) {
+        ArrayList<Task> arrayTaskList = taskList.getTasks();
+        int number = 1;
+        for (Task task : arrayTaskList) {
+            System.out.println("   " + number + ". " + task.toString());
+            number++;
+        }
     }
 
     /**

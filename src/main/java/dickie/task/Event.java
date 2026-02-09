@@ -49,8 +49,8 @@ public class Event extends Task {
         // Format: "E | X | task detail | 2pm | 4pm"
         return String.format("E | %s | %s | %s | %s",
                 getFileStatusIcon(),
-                description.trim(),
-                from.trim(),
-                to.trim());
+                description,
+                from,
+                to);
     }
 }

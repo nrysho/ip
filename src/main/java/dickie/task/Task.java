@@ -1,9 +1,11 @@
 package dickie.task;
 
+import dickie.utils.Ui;
+
 /**
  * Represents a generic task with a description and completion status
  */
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -57,7 +59,7 @@ public class Task {
     }
 
     /**
-     * Returns the string representation of the task.
+     * Returns the string representation of the task for users to see.
      *
      * @return Task description
      */
@@ -66,21 +68,18 @@ public class Task {
     }
 
     /**
-     * Converts task to file format string
+     * Converts task to file format string to save into file
      * Format: "T | X | task detail" or "D | X | task detail | Monday 2359" etc.
      *
      * @return String representation for file storage
      */
-    public String toFileString() {
-        return null;
-    }
+    public abstract String toFileString();
 
     /**
      * Marks the task as done and prints a confirmation message.
      */
     public void mark() {
         this.isDone = true;
-        System.out.println("   good job! I've marked " + "[task: " +  this.toString() + "] as DONE");
     }
 
     /**
@@ -88,6 +87,5 @@ public class Task {
      */
     public void unmark() {
         this.isDone = false;
-        System.out.println("   aite, I've unmarked " + "[task: " + this.toString() + "]");
     }
 }
