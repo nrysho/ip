@@ -3,12 +3,18 @@ package dickie.utils;
 import dickie.task.Task;
 
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
+import java.util.Scanner;
+import java.util.StringJoiner;
+>>>>>>> Stashed changes
 
 /**
  * Handles all user interface interactions for the Dickie application.
  * This class is responsible for displaying messages and information to the user.
  */
 public class Ui {
+<<<<<<< Updated upstream
     /**
      * Prints message to show the user the task they added and number of tasks currently.
      *
@@ -57,11 +63,35 @@ public class Ui {
      */
     public void showFoundTasks(ArrayList<Task> foundTasks) {
         System.out.println("   Here are the matching tasks in your list:");
+=======
+    public String showTaskAdded(Task task, int size) {
+        return "   okie, I've added the task:\n" +
+               "     " + task.toString() +
+               "\n   you now have " + size + " tasks in your list.";
+    }
+
+    public String showTaskMarked(String task) {
+        return "   good job! I've marked " + "[task: " +  task + "] as DONE";
+    }
+
+    public String showTaskUnmarked(String task) {
+        return "   aite, I've unmarked " + "[task: " + task + "]";
+    }
+
+    public String showTaskDeleted(String task, int taskListSize) {
+        return "   got it, deleted task: [" + task + "]!"
+                + "\n   you now have " + taskListSize + " tasks in your list.";
+    }
+
+    public String showFoundTasks(ArrayList<Task> foundTasks) {
+        StringBuilder sb = new StringBuilder("   Here are the matching tasks in your list:");
+>>>>>>> Stashed changes
         int idx = 1;
         for (Task task: foundTasks) {
-            System.out.println("    " + idx + ". " + task.toString());
+            sb.append("/n    " + idx + ". " + task.toString());
             idx++;
         }
+        return sb.toString();
     }
 
     /**
@@ -69,29 +99,29 @@ public class Ui {
      *
      * @param taskList The TaskList object containing all tasks to be displayed
      */
-    public void listTasks(TaskList taskList) {
+    public String listTasks(TaskList taskList) {
+        StringBuilder sb = new StringBuilder();
         ArrayList<Task> arrayTaskList = taskList.getTasks();
         int number = 1;
         for (Task task : arrayTaskList) {
-            System.out.println("   " + number + ". " + task.toString());
+            sb.append("\n   " + number + ". " + task.toString());
             number++;
         }
+        return sb.toString();
     }
 
     /**
      * Prints the greeting message when the program starts.
      */
-    public void showGreeting() {
-        String greeting = "   Hey gorlll I'm dickie\n" +
+    public String showGreeting() {
+        return "   Hey gorlll I'm dickie\n" +
                 "   What can I do for you?";
-        System.out.println(greeting);
     }
 
     /**
      * Prints the farewell message when the program ends.
      */
-    public void showGoodbye() {
-        String greeting = "   Byee. See ya~";
-        System.out.println(greeting);
+    public String showGoodbye() {
+        return "   Byee. See ya~";
     }
 }

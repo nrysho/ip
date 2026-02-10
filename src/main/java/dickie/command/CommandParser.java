@@ -30,41 +30,35 @@ public class CommandParser {
      * @param ui Ui object to handle displayed messages
      * @throws DickieException If the input is invalid or cannot be parsed
      */
-    public static void handleInput(String input, TaskList taskList, Ui ui) throws DickieException {
+    public static String handleInput(String input, TaskList taskList, Ui ui) throws DickieException {
         CommandType commandType = CommandParser.getInputCommandType(input, taskList.getSize());
         String[] splitInput = CommandParser.splitInput(input);
 
         switch (commandType) {
-            case LIST:
-                ui.listTasks(taskList);
-                break;
-            case MARK:
-                Task markedTask = taskList.mark(splitInput[1]);
-                ui.showTaskMarked(markedTask.toString());
-                break;
-            case UNMARK:
-                Task unmarkedTask = taskList.unmark(splitInput[1]);
-                ui.showTaskUnmarked(unmarkedTask.toString());
-                break;
-            case DELETE:
-                Task deletedTask = taskList.delete(splitInput[1]);
-                ui.showTaskDeleted(deletedTask.toString(), taskList.getSize());
-                break;
-            case FIND:
-                ArrayList<Task> foundTasks = taskList.find(splitInput[1]);
-                ui.showFoundTasks(foundTasks);
-                break;
-            case ADDTASK:
-                handleAddTask(input, splitInput, taskList, ui);
-                break;
-            default:
-                throw new DickieException("   unknown command!");
+        case LIST:
+            return ui.listTasks(taskList);
+        case MARK:
+            Task markedTask = taskList.mark(splitInput[1]);
+            return ui.showTaskMarked(markedTask.toString());
+        case UNMARK:
+            Task unmarkedTask = taskList.unmark(splitInput[1]);
+            return ui.showTaskUnmarked(unmarkedTask.toString());
+        case DELETE:
+            Task deletedTask = taskList.delete(splitInput[1]);
+            return ui.showTaskDeleted(deletedTask.toString(), taskList.getSize());
+        case FIND:
+            ArrayList<Task> foundTasks = taskList.find(splitInput[1]);
+            return ui.showFoundTasks(foundTasks);
+        case ADDTASK:
+            return handleAddTask(input, splitInput, taskList, ui);
+        default:
+            throw new DickieException("   unknown command!");
         }
     }
 
     /**
      * Determines the type of command based on the user input.
-     * Valid commands include list, mark, unmark, delete, and add task commands.
+     * Valid commands include list, mark, unmark, delete, find and add task commands.
      *
      * @param input Full user input string
      * @param noOfTasks Current number of tasks in the task list
@@ -129,7 +123,7 @@ public class CommandParser {
      * @param ui Ui object to display messages
      * @throws DickieException If the task type or task details are invalid
      */
-    public static void handleAddTask(String input, String[] splitInput, TaskList taskList,
+    public static String handleAddTask(String input, String[] splitInput, TaskList taskList,
                                      Ui ui) throws DickieException {
         TaskType taskType = CommandParser.getTaskType(splitInput);
         Task newTask = switch (taskType) {
@@ -139,7 +133,7 @@ public class CommandParser {
         };
 
         taskList.addTask(newTask);
-        ui.showTaskAdded(newTask, taskList.getSize());
+        return ui.showTaskAdded(newTask, taskList.getSize());
     }
 
     /**

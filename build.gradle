@@ -42,7 +42,7 @@ test {
 }
 
 application {
-    mainClass.set("dickie.Dickie")
+    mainClass.set("dickie.gui.Launcher")
 }
 
 shadowJar {
