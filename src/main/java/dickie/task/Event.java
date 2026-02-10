@@ -44,6 +44,11 @@ public class Event extends Task {
         return "[E]" + super.getStatusIcon() + " " +super.toString() + " (from: " + from + " to: " + to + ")";
     }
 
+    /**
+     * Converts the event task to file format string for storage.
+     *
+     * @return String representation in format "E | X | description | from | to"
+     */
     @Override
     public String toFileString() {
         // Format: "E | X | task detail | 2pm | 4pm"

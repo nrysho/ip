@@ -1,7 +1,5 @@
 package dickie.task;
 
-import dickie.utils.Ui;
-
 /**
  * Represents a generic task with a description and completion status
  */

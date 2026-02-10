@@ -51,7 +51,7 @@ public class Storage {
     }
 
     /**
-     * Load tasks from file specified in filePath when chatbot starts
+     * Loads tasks from file specified in filePath when chatbot starts
      *
      * @return ArrayList containing all tasks in file in filePath, or empty list if file doesn't exist
      */
@@ -149,7 +149,7 @@ public class Storage {
     }
 
     /**
-     * Internal method that actually writes to file
+     * Writes tasks to file
      *
      * @param tasks The list of tasks to write to the file
      */

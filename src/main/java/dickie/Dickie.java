@@ -12,7 +12,6 @@ import java.util.*;
 
 /**
  * Entry point of the dickie task management application
- * Handles user input and coordinates command execution
  */
 public class Dickie {
     public static void main(String[] args) {

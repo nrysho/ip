@@ -5,9 +5,11 @@ import dickie.exception.DickieException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Factory class for creating different types of Task objects from user input.
+ * Handles parsing and validation of task creation commands.
+ */
 public class TaskFactory {
-
-
     /**
      * Creates a new todo task from the user input.
      *

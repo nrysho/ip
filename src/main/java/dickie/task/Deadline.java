@@ -44,6 +44,11 @@ public class Deadline extends Task {
                 LocalDate.parse(by).format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ")";
     }
 
+    /**
+     * Converts the deadline task to file format string for storage.
+     *
+     * @return String representation in format "D | X | description | deadline"
+     */
     @Override
     public String toFileString() {
         // Format: "D | X | task detail | Monday 2359"
