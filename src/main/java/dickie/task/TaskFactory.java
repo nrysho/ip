@@ -55,7 +55,7 @@ public class TaskFactory {
      * @throws DickieException If details of todo task not specified
      */
     public static String getTodoDetails(String message) throws DickieException {
-        String details = message.substring(4).trim();
+        String details = message.substring("todo".length()).trim();
         if (details.isBlank()) {
             throw new DickieException("   try again, no task indicated to do!");
         }
@@ -72,18 +72,27 @@ public class TaskFactory {
      */
     public static String[] getDeadlineDetails(String input) throws DickieException {
         int byIndex = input.indexOf("/by");
-        String taskDeadline = input.substring(byIndex + 3).trim();
-        // if substring " /by " does not exist, or if there are no words after "/by", throw exception
-        if (!input.matches(".*\\s" + "/by" + "\\s.*") || taskDeadline.isBlank()) {
+
+        if (byIndex == -1) {
             throw new DickieException("   try again! use \"/by\" to indicate the deadline of this task!");
         }
+
+        String taskName = input.substring("deadline".length(), byIndex).trim();
+        String taskDeadline = input.substring(byIndex + "/by".length()).trim();
+
+        if (taskName.isBlank()) {
+            throw new DickieException("   try again! enter the name of the deadline task!");
+        }
+
+        if (taskDeadline.isBlank()) {
+            throw new DickieException("   try again! enter a deadline date!");
+        }
+
         try {
             LocalDate.parse(taskDeadline);
         } catch (DateTimeParseException e) {
             throw new DickieException("   try again! Deadline must be in YYYY-MM-DD format!");
         }
-        String taskName = input.substring(9, byIndex).trim();
-
         return new String[]{taskName, taskDeadline};
     }
 
@@ -96,19 +105,29 @@ public class TaskFactory {
      * @throws DickieException If "/from" or "/to" is missing from the input
      */
     public static String[] getEventDetails(String input) throws DickieException {
-        // if substring " /from " or " /to " does not exist, throw exception
-        if (!input.matches(".*\\s" + "/from" + "\\s.*") ||
-                !input.matches(".*\\s" + "/to" + "\\s.*")) {
-            throw new DickieException("   try again! use \"/from\" and \"/to\" to indicate the duration of the event!");
-        }
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
-        String taskName = input.substring(5, fromIndex).trim();
+
+        if (fromIndex == -1 || toIndex == -1) {
+            throw new DickieException("   try again! use \"/from\" and \"/to\" to indicate the duration of the event!");
+        }
+
+        if (fromIndex > toIndex) {
+            throw new DickieException("   invalid event format! use \"/from\" before \"/to\"!");
+        }
+
+        String taskName = input.substring("event".length(), fromIndex).trim();
+
         if (taskName.isBlank()) {
             throw new DickieException("   try again! enter the name of the event!");
         }
-        String from = input.substring(fromIndex + 5, toIndex).trim();
-        String to = input.substring(toIndex + 3).trim();
+
+        String from = input.substring(fromIndex + "/from".length(), toIndex).trim();
+        String to = input.substring(toIndex + "/to".length()).trim();
+
+        if (from.isBlank() || to.isBlank()) {
+            throw new DickieException("   try again! event must have both start and end time!");
+        }
 
         return new String[]{taskName, from, to};
     }
