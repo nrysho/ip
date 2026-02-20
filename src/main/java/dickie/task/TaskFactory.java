@@ -55,7 +55,7 @@ public class TaskFactory {
      * @throws DickieException If details of todo task not specified
      */
     public static String getTodoDetails(String message) throws DickieException {
-        String details = message.substring(4).trim();
+        String details = message.substring("todo".length()).trim();
         if (details.isBlank()) {
             throw new DickieException("   try again, no task indicated to do!");
         }
@@ -71,18 +71,23 @@ public class TaskFactory {
      * @throws DickieException If "/by" is missing or no deadline is provided
      */
     public static String[] getDeadlineDetails(String input) throws DickieException {
-        int byIndex = input.indexOf("/by");
-        String taskDeadline = input.substring(byIndex + 3).trim();
+
         // if substring " /by " does not exist, or if there are no words after "/by", throw exception
-        if (!input.matches(".*\\s" + "/by" + "\\s.*") || taskDeadline.isBlank()) {
+        if (!input.matches(".*\\s" + "/by" + "\\s.*")) {
             throw new DickieException("   try again! use \"/by\" to indicate the deadline of this task!");
         }
+        int byIndex = input.indexOf("/by");
+        String taskDeadline = input.substring(byIndex + "/by".length()).trim();
+
         try {
             LocalDate.parse(taskDeadline);
         } catch (DateTimeParseException e) {
             throw new DickieException("   try again! Deadline must be in YYYY-MM-DD format!");
         }
-        String taskName = input.substring(9, byIndex).trim();
+        String taskName = input.substring("deadline".length(), byIndex).trim();
+        if (taskName.isBlank()) {
+            throw new DickieException("   try again! enter the name of the deadline task!");
+        }
 
         return new String[]{taskName, taskDeadline};
     }
@@ -103,12 +108,15 @@ public class TaskFactory {
         }
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
-        String taskName = input.substring(5, fromIndex).trim();
+        if (fromIndex > toIndex) {
+            throw new DickieException("   invalid event format! use \"/from\" before \"/to\"!");
+        }
+        String taskName = input.substring("event".length(), fromIndex).trim();
         if (taskName.isBlank()) {
             throw new DickieException("   try again! enter the name of the event!");
         }
-        String from = input.substring(fromIndex + 5, toIndex).trim();
-        String to = input.substring(toIndex + 3).trim();
+        String from = input.substring(fromIndex + "/from".length(), toIndex).trim();
+        String to = input.substring(toIndex + "/to".length()).trim();
 
         return new String[]{taskName, from, to};
     }

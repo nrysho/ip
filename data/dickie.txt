@@ -1,6 +1,3 @@
-T |   | jdjskfhdgf
-T |   | aaa
-D |   | l | 2022-12-12
-E |   | df | ds | df
-E |   | sd | df | sdf
-T |   | fskjfkd
+T |   | buy apples
+E | X | break a leg | today | tomorrow
+D |   | cs2103 | 2026-02-20
