@@ -1,3 +1,3 @@
-T |   | do dishes
-E |   | midterms | today | after cny
-D |   | take out trash | 2026-02-20
+T |   | buy apples
+E | X | break a leg | today | tomorrow
+D |   | cs2103 | 2026-02-20

@@ -15,10 +15,9 @@ import java.util.*;
  * It handles user input, processes commands, and persists tasks to storage.
  */
 public class Dickie {
-    Storage storage;
-    ArrayList<Task> loadedTasks;
-    Ui ui;
-    TaskList taskList;
+    private final Storage storage;
+    private final Ui ui;
+    private final TaskList taskList;
 
     /**
      * Constructs a new Dickie instance.
@@ -30,7 +29,8 @@ public class Dickie {
         this.ui = new Ui();
 
         // Load tasks from file on startup
-        this.loadedTasks = storage.load();
+        ArrayList<Task> loadedTasks = storage.load();
+        assert loadedTasks != null : "Loaded tasks should not be null";
 
         // put loaded tasks into a taskList object
         this.taskList = new TaskList(loadedTasks);
@@ -47,12 +47,12 @@ public class Dickie {
     public String getResponse(String input) {
         if (input.equals("bye")) {
             storage.save(taskList);
-            String goodbyeMessage = ui.showGoodbye();
-            return goodbyeMessage;
+            return ui.showGoodbye();
         }
 
         try {
             String response = CommandParser.handleInput(input, taskList, ui);
+            assert response != null : "Response from CommandParser should not be null";
             return response;
         } catch (DickieException e) {
             return e.getMessage();
@@ -83,6 +83,7 @@ public class Dickie {
         while (true) {
             String input = scanner.nextLine();
             String response = dickie.getResponse(input);
+            assert response != null : "Response from CommandParser should not be null";
             System.out.println(response);
             if (input.equals("bye")) {
                 dickie.storage.save(dickie.taskList);

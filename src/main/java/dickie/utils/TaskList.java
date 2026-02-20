@@ -46,6 +46,8 @@ public class TaskList {
      */
     public Task mark(String taskNumber){
         int taskPos = Integer.parseInt(taskNumber) - 1; // zero based indexing
+        assert taskPos >= 0 && taskPos < taskList.size() : "Task index" +
+                "out of bounds";
         Task taskToMark = taskList.get(taskPos);
         taskToMark.mark();
         return taskToMark;

@@ -28,7 +28,7 @@ public class Ui {
         StringBuilder sb = new StringBuilder("   Here are the matching tasks in your list:");
         int idx = 1;
         for (Task task: foundTasks) {
-            sb.append("/n    " + idx + ". " + task.toString());
+            sb.append("\n    " + idx + ". " + task.toString());
             idx++;
         }
         return sb.toString();
@@ -40,11 +40,18 @@ public class Ui {
      * @param taskList The TaskList object containing all tasks to be displayed
      */
     public String listTasks(TaskList taskList) {
+        if (taskList.getSize() == 0)  {
+            return "   you currently have no tasks in your tasklist!";
+        }
         StringBuilder sb = new StringBuilder();
         ArrayList<Task> arrayTaskList = taskList.getTasks();
         int number = 1;
         for (Task task : arrayTaskList) {
-            sb.append("\n   " + number + ". " + task.toString());
+            if (number == 1) {
+                sb.append("   " + number + ". " + task.toString());
+            } else {
+                sb.append("\n   " + number + ". " + task.toString());
+            }
             number++;
         }
         return sb.toString();
