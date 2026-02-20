@@ -19,7 +19,7 @@ public class CommandParser {
      * @return Array of strings obtained by splitting the input
      */
     public static String[] splitInput(String input) {
-        return input.split("\\s+");
+        return input.trim().split("\\s+");
     }
 
     /**
@@ -31,8 +31,10 @@ public class CommandParser {
      * @throws DickieException If the input is invalid or cannot be parsed
      */
     public static String handleInput(String input, TaskList taskList, Ui ui) throws DickieException {
-        CommandType commandType = CommandParser.getInputCommandType(input, taskList.getSize());
-        String[] splitInput = CommandParser.splitInput(input);
+        String[] splitInput = splitInput(input);
+        CommandType commandType = getInputCommandType(splitInput, taskList.getSize());
+
+        assert ui != null : "Ui should not be null";
 
         switch (commandType) {
         case LIST:
@@ -60,57 +62,82 @@ public class CommandParser {
      * Determines the type of command based on the user input.
      * Valid commands include list, mark, unmark, delete, find and add task commands.
      *
-     * @param input Full user input string
      * @param noOfTasks Current number of tasks in the task list
      * @return The CommandType corresponding to the user input
      * @throws DickieException If the input is empty or contains an invalid task number
      */
-    public static CommandType getInputCommandType(String input, int noOfTasks) throws DickieException {
-
-        String[] splitInput = input.split("\\s+");
-
-        if (input.isEmpty()) {
+    public static CommandType getInputCommandType(String[] splitInput, int noOfTasks) throws DickieException {
+        if (splitInput.length == 0 || splitInput[0].isBlank()) {
             throw new DickieException("   empty input :( let me know how I can help!");
         }
-        if (input.equals("list")) {
-            return CommandType.LIST;
-        }
-        if (splitInput[0].equals("find")) {
-            return CommandType.FIND;
-        }
-        if (splitInput.length == 2 && isNumeric(splitInput[1])
-                && (splitInput[0].equals("mark") ||
-                splitInput[0].equals("unmark") ||
-                splitInput[0].equals("delete"))) {
-            int num = Integer.parseInt(splitInput[1]);
-            if ((num < 1) || (num > noOfTasks)) {
-                throw new DickieException("   invalid task number, try again!");
+
+        int noOfInputtedWords = splitInput.length;
+        String firstWord = splitInput[0].trim();
+
+        switch (firstWord) {
+        case "list":
+            if (noOfInputtedWords == 1) {
+                return CommandType.LIST;
+            } else {
+                throw new DickieException("   try simply typing \"list\" to list your tasks!");
             }
-            if (splitInput[0].equals("mark")) {
-                return CommandType.MARK;
-            } else if (splitInput[0].equals("unmark")) {
-                return CommandType.UNMARK;
-            } else { // splitInput[0] equals "delete"
-                return CommandType.DELETE;
+        case "find":
+            if (noOfInputtedWords != 1) {
+                return CommandType.FIND;
+            } else {
+                throw new DickieException("   what task would you like me to find? try using the format \"find exampleTask\"!");
             }
+        case "mark":
+            if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
+               throw new DickieException("   try again, using the format \"mark <taskNumber>\"!");
+            }
+            return CommandType.MARK;
+        case "unmark":
+            if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
+                throw new DickieException("   try again, using the format \"unmark <taskNumber>\"!");
+            }
+            return CommandType.UNMARK;
+        case "delete":
+            if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
+                throw new DickieException("   try again, using the format \"delete <taskNumber>\"!");
+            }
+            return CommandType.DELETE;
+        case "deadline", "todo", "event":
+            return CommandType.ADDTASK; // input format checked in TaskFactory
+        default:
+            throw new DickieException("   invalid command type! try the following commands:\n" +
+                    "   list, find, mark, unmark, delete, deadline, todo, event :)");
         }
-        return CommandType.ADDTASK;
     }
 
     /**
-     * Checks whether a given string can be parsed as a numeric value.
+     * Checks if input format is in <word> <number> format
      *
-     * @param input String to be checked
-     * @return True if the string is numeric, false otherwise
+     * @param splitInput Array for input string split by whitespaces
+     * @param noOfInputtedWords Number of words in input
+     * @return True if format is in <word> <number> format, false otherwise
      */
-    public static boolean isNumeric(String input) {
-        if (input == null) {
+
+    public static boolean isWordTaskNumberFormat(String[] splitInput, int noOfInputtedWords, int noOfTasks) {
+        assert noOfInputtedWords >= 1 : "Input should be at least one word";
+
+        if (noOfInputtedWords != 2) {
             return false;
         }
+        return isValidTaskNumber(splitInput[1], noOfTasks);
+    }
+
+    /**
+     * Checks if second input String is a valid task number in the range [1, noOfTasks]
+     * @param secondString Second input String
+     * @param noOfTasks Number of tasks in TaskList
+     * @return True if task number is in valid range, false otherwise
+     */
+    public static boolean isValidTaskNumber(String secondString, int noOfTasks) {
         try {
-            Integer.parseInt(input);
-            return true;
-        } catch (NumberFormatException e) {
+            int number = Integer.parseInt(secondString);
+            return (number >= 1) && (number <= noOfTasks);
+        } catch (java.lang.NumberFormatException e) {
             return false;
         }
     }
@@ -125,7 +152,7 @@ public class CommandParser {
      */
     public static String handleAddTask(String input, String[] splitInput, TaskList taskList,
                                      Ui ui) throws DickieException {
-        TaskType taskType = CommandParser.getTaskType(splitInput);
+        TaskType taskType = getTaskType(splitInput);
         Task newTask = switch (taskType) {
             case TODO -> TaskFactory.createTodo(input);
             case DEADLINE -> TaskFactory.createDeadline(input);

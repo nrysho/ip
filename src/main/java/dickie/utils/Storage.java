@@ -125,16 +125,24 @@ public class Storage {
      */
     public static Task parseTask(String fileString) throws DickieException {
         String[] splitString = fileString.split(" \\| ");
+        assert splitString.length >= 3 : "Corrupted file format: " + fileString;
         String taskType = splitString[0].trim();
         String description = splitString[2].trim();
         boolean marked = Objects.equals(splitString[1], "X");
 
-        return switch (taskType) {
-            case "T" -> new Todo(description, marked);
-            case "D" -> new Deadline(description, splitString[3].trim(), marked);
-            case "E" -> new Event(description, splitString[3].trim(), splitString[4].trim(), marked);
-            default -> throw new DickieException("Error in when parsing file: Invalid task type.");
-        };
+        switch (taskType) {
+        case "T":
+            assert splitString.length == 3 : "Todo must have 3 fields";
+            return new Todo(description, marked);
+        case "D":
+            assert splitString.length == 4 : "Deadline must have 4 fields";
+            return new Deadline(description, splitString[3].trim(), marked);
+        case "E":
+            assert splitString.length == 5 : "Event must have 5 fields";
+            return new Event(description, splitString[3].trim(), splitString[4].trim(), marked);
+        default:
+            throw new DickieException("Error in when parsing file: Invalid task type.");
+        }
     }
 
     /**
