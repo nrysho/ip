@@ -2,6 +2,7 @@ package dickie.utils;
 
 import dickie.task.Task;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Manages a collection of Task objects in memory.
@@ -92,17 +93,8 @@ public class TaskList {
      * @return ArrayList of tasks whose descriptions contain the keyword
      */
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-        for (Task task: taskList) {
-            String description = task.getDescription();
-            String[] splitDescription = description.split(" ");
-            for (String word: splitDescription) {
-                if (word.equals(keyword)) {
-                    matchingTasks.add(task);
-                    break;
-                }
-            }
-        }
-        return matchingTasks;
+        return taskList.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
