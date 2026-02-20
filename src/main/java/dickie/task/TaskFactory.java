@@ -125,6 +125,17 @@ public class TaskFactory {
         String from = input.substring(fromIndex + "/from".length(), toIndex).trim();
         String to = input.substring(toIndex + "/to".length()).trim();
 
+        try {
+            LocalDate.parse(from);
+            LocalDate.parse(to);
+        } catch (DateTimeParseException e) {
+            throw new DickieException("   try again! Event start and end time must be in YYYY-MM-DD format!");
+        }
+
+        if (LocalDate.parse(from).isAfter(LocalDate.parse(to))) {
+            throw new DickieException("   try again! event start date should be before end date!");
+        }
+
         if (from.isBlank() || to.isBlank()) {
             throw new DickieException("   try again! event must have both start and end time!");
         }

@@ -1,5 +1,8 @@
 package dickie.task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task that occurs over a specific time period
  */
@@ -41,7 +44,11 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.getStatusIcon() + " " +super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.getStatusIcon() + " " +super.toString() + " (from: "
+                + LocalDate.parse(from).format(DateTimeFormatter.ofPattern("MMM d yyyy"))
+                + " to: "
+                + LocalDate.parse(to).format(DateTimeFormatter.ofPattern("MMM d yyyy"))
+                + ")";
     }
 
     /**
