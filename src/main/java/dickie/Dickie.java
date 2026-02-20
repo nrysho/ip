@@ -10,7 +10,6 @@ import dickie.utils.Ui;
 import java.util.*;
 
 /**
- * Entry point of the dickie task management application
  * The main class for the Dickie chatbot application.
  * Dickie is a task management chatbot that helps users manage todos, deadlines, and events.
  * It handles user input, processes commands, and persists tasks to storage.
@@ -87,6 +86,7 @@ public class Dickie {
             assert response != null : "Response from CommandParser should not be null";
             System.out.println(response);
             if (input.equals("bye")) {
+                dickie.storage.save(dickie.taskList);
                 break;
             }
         }
