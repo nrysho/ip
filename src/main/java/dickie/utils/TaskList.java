@@ -2,6 +2,7 @@ package dickie.utils;
 
 import dickie.task.Task;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +37,7 @@ public class TaskList {
      */
     public void addTask(Task task){
         taskList.add(task);
+        Collections.sort(taskList);
     }
 
     /**

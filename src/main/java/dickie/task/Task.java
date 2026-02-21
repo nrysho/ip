@@ -3,7 +3,7 @@ package dickie.task;
 /**
  * Represents a generic task with a description and completion status
  */
-public abstract class Task {
+public abstract class Task implements Comparable<Task> {
     protected String description;
     protected boolean isDone;
     protected Priority priority;
@@ -31,6 +31,11 @@ public abstract class Task {
         this.description = description;
         this.priority = priority;
         this.isDone = isDone;
+    }
+
+    @Override
+    public int compareTo(Task other) {
+        return other.priority.compareTo(this.priority); // HIGH first
     }
 
     /**
