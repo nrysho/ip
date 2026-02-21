@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private Dickie dickie = new Dickie();
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image dickieImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
 
     @Override
     public void start(Stage stage) {
