@@ -1,9 +1,6 @@
 package dickie.utils;
 import dickie.exception.DickieException;
-import dickie.task.Deadline;
-import dickie.task.Event;
-import dickie.task.Task;
-import dickie.task.Todo;
+import dickie.task.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +33,12 @@ public class Storage {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Checks if the data file exists at the given path, creating it if it does not.
+     *
+     * @param path The path to the data file
+     * @return true if the file already existed, false if it was newly created
+     */
     public boolean ensureFileExists(Path path) {
         try {
             if (!Files.exists(path)) {
@@ -97,8 +100,9 @@ public class Storage {
     }
 
     /**
-     * Checks if data directory to file path exists
-     * Creates necessary parent directories if they don't exist
+     * Checks if the parent directory of the given path exists, creating it if it does not.
+     *
+     * @param path The path whose parent directory should be checked
      */
     private void ensureFileDirectoryExists(Path path) {
         try {
@@ -125,24 +129,44 @@ public class Storage {
      */
     public static Task parseTask(String fileString) throws DickieException {
         String[] splitString = fileString.split(" \\| ");
-        assert splitString.length >= 3 : "Corrupted file format: " + fileString;
+        assert splitString.length >= 4 : "Corrupted file format: " + fileString;
         String taskType = splitString[0].trim();
         String description = splitString[2].trim();
-        boolean marked = Objects.equals(splitString[1], "X");
+        boolean isMarked = Objects.equals(splitString[1], "X");
 
-        switch (taskType) {
-        case "T":
-            assert splitString.length == 3 : "Todo must have 3 fields";
-            return new Todo(description, marked);
-        case "D":
-            assert splitString.length == 4 : "Deadline must have 4 fields";
-            return new Deadline(description, splitString[3].trim(), marked);
-        case "E":
-            assert splitString.length == 5 : "Event must have 5 fields";
-            return new Event(description, splitString[3].trim(), splitString[4].trim(), marked);
-        default:
-            throw new DickieException("Error in when parsing file: Invalid task type.");
-        }
+        return switch (taskType) {
+            case "T" -> {
+                assert splitString.length == 4 : "Todo must have 4 fields (including priority tag)";
+                yield new Todo(description, strToPriority(splitString[3].trim()), isMarked);
+            }
+            case "D" -> {
+                assert splitString.length == 5 : "Deadline must have 5 fields";
+                yield new Deadline(description, splitString[3].trim(), strToPriority(splitString[4].trim()), isMarked);
+            }
+            case "E" -> {
+                assert splitString.length == 6 : "Event must have 6 fields";
+                yield new Event(description, splitString[3].trim(), splitString[4].trim(),
+                        strToPriority(splitString[5].trim()), isMarked);
+            }
+            default -> throw new DickieException("Error in when parsing file: Invalid task type.");
+        };
+    }
+
+    /**
+     * Converts a priority string from the data file into a Priority enum value.
+     *
+     * @param str The priority string to convert, expected to be LOW, MEDIUM, or HIGH
+     * @return The corresponding Priority enum value
+     * @throws DickieException If the string does not match a valid priority value
+     */
+    public static Priority strToPriority(String str) throws DickieException {
+        assert str.equals("LOW") || str.equals("MEDIUM") || str.equals("HIGH");
+        return switch (str) {
+            case "LOW" -> Priority.LOW;
+            case "MEDIUM" -> Priority.MEDIUM;
+            case "HIGH" -> Priority.HIGH;
+            default -> throw new DickieException("   invalid priority syntax");
+        };
     }
 
     /**

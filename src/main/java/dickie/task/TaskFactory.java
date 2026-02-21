@@ -6,140 +6,218 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 /**
- * Factory class for creating different types of Task objects from user input.
- * Handles parsing and validation of task creation commands.
+ * Factory class responsible for parsing user input and constructing Task objects.
+ * Supports creation of Todo, Deadline, and Event tasks.
+ * Each factory method validates that required markers exist and appear in the correct order,
+ * that no required fields are left blank, that dates follow YYYY-MM-DD format,
+ * and that event start dates are before end dates.
  */
 public class TaskFactory {
+
     /**
-     * Creates a new todo task from the user input.
+     * Creates a Todo task from user input.
      *
-     * @param input Full user input string
-     * @return Newly created todo task
-     * @throws DickieException If the task description is missing
+     * @param input Raw user input string
+     * @return A new Todo task
+     * @throws DickieException If the input is missing required markers, has blank fields,
+     *                         or contains an invalid priority value
      */
     public static Task createTodo(String input) throws DickieException {
-        String details = getTodoDetails(input);
-        return new Todo(details);
+        int pIndex = requireIndex(input, "/p",
+                         "   try again! use \"/p\" to indicate the priority of this task!");
+
+        String name = extractSegment(
+                input,
+                "todo".length(),
+                pIndex,
+                "   try again, no task indicated to do!"
+        );
+        Priority priority = parsePriority(input, pIndex);
+        return new Todo(name, priority);
     }
 
     /**
-     * Creates a new deadline task from the user input.
+     * Creates a Deadline task from user input.
      *
-     * @param input Full user input string
-     * @return Newly created deadline task
-     * @throws DickieException If the deadline details are missing or invalid
+     * @param input Raw user input string
+     * @return A new Deadline task
+     * @throws DickieException If the input is missing required markers, has blank fields,
+     *                         contains an invalid date format, or has markers in the wrong order
      */
     public static Task createDeadline(String input) throws DickieException {
-        String[] details = getDeadlineDetails(input);
-        return new Deadline(details[0], details[1]);
+        int byIndex = requireIndex(input, "/by",
+                          "   try again! use \"/by\" to indicate the deadline of this task!");
+
+        int pIndex = requireIndex(input, "/p",
+                         "   try again! use \"/p\" to indicate the priority!");
+
+        if (byIndex > pIndex) {
+            throw new DickieException("   invalid format! \"/by\" should come before \"/p\"!");
+        }
+
+        String name = extractSegment(
+                input,
+                "deadline".length(),
+                byIndex,
+                "   try again, no task indicated to do!"
+        );
+
+        String deadline = extractSegment(
+                input,
+                byIndex + "/by".length(),
+                pIndex,
+                "   try again! enter a deadline date!"
+        );
+
+        validateDate(deadline,
+                "   try again! Deadline must be in YYYY-MM-DD format!");
+
+        Priority priority = parsePriority(input, pIndex);
+        return new Deadline(name, deadline, priority);
     }
 
     /**
-     * Creates a new event task from the user input.
+     * Creates an Event task from user input.
      *
-     * @param input Full user input string
-     * @return Newly created event task
-     * @throws DickieException If the event duration details are missing or invalid
+     * @param input Raw user input string
+     * @return A new Event task
+     * @throws DickieException If the input is missing required markers, has blank fields,
+     *                         contains an invalid date format, has markers in the wrong order,
+     *                         or has a start date after the end date
      */
     public static Task createEvent(String input) throws DickieException {
-        String[] details = getEventDetails(input);
-        return new Event(details[0], details[1], details[2]);
-    }
+        int fromIndex = requireIndex(input, "/from",
+                            "   try again! use \"/from\" to indicate the start of the event!");
 
-    /**
-     * Returns the details of a todo task.
-     * If the input is "todo" with no task, throws DickieException with error message.
-     *
-     * @param message String message input by user
-     * @return Details of todo task
-     * @throws DickieException If details of todo task not specified
-     */
-    public static String getTodoDetails(String message) throws DickieException {
-        String details = message.substring("todo".length()).trim();
-        if (details.isBlank()) {
-            throw new DickieException("   try again, no task indicated to do!");
-        }
-        return details;
-    }
+        int toIndex = requireIndex(input, "/to",
+                          "   try again! use \"/to\" to indicate the end of the event!");
 
-    /**
-     * Extracts the task name and deadline from a deadline command.
-     * The deadline must be specified using the "/by" keyword.
-     *
-     * @param input Full user input string
-     * @return String array containing the task name and deadline
-     * @throws DickieException If "/by" is missing or no deadline is provided
-     */
-    public static String[] getDeadlineDetails(String input) throws DickieException {
-        int byIndex = input.indexOf("/by");
+        int pIndex = requireIndex(input, "/p",
+                         "   try again! use \"/p\" to indicate the priority!");
 
-        if (byIndex == -1) {
-            throw new DickieException("   try again! use \"/by\" to indicate the deadline of this task!");
+        if (!(fromIndex < toIndex && toIndex < pIndex)) {
+            throw new DickieException("   invalid format! use \"/from\" before \"/to\" before \"/p\"!");
         }
 
-        String taskName = input.substring("deadline".length(), byIndex).trim();
-        String taskDeadline = input.substring(byIndex + "/by".length()).trim();
+        String name = extractSegment(
+                input,
+                "event".length(),
+                fromIndex,
+                "   try again, no task indicated to do!"
+        );
 
-        if (taskName.isBlank()) {
-            throw new DickieException("   try again! enter the name of the deadline task!");
-        }
+        String from = extractSegment(
+                input,
+                fromIndex + "/from".length(),
+                toIndex,
+                "   try again! enter an event start date!"
+        );
 
-        if (taskDeadline.isBlank()) {
-            throw new DickieException("   try again! enter a deadline date!");
-        }
+        String to = extractSegment(
+                input,
+                toIndex + "/to".length(),
+                pIndex,
+                "   try again! enter an event end date!"
+        );
 
-        try {
-            LocalDate.parse(taskDeadline);
-        } catch (DateTimeParseException e) {
-            throw new DickieException("   try again! Deadline must be in YYYY-MM-DD format!");
-        }
-        return new String[]{taskName, taskDeadline};
-    }
-
-    /**
-     * Extracts the task name, start time, and end time from an event command.
-     * The duration must be specified using the "/from" and "/to" keywords.
-     *
-     * @param input Full user input string
-     * @return String array containing the task name, start time, and end time
-     * @throws DickieException If "/from" or "/to" is missing from the input
-     */
-    public static String[] getEventDetails(String input) throws DickieException {
-        int fromIndex = input.indexOf("/from");
-        int toIndex = input.indexOf("/to");
-
-        if (fromIndex == -1 || toIndex == -1) {
-            throw new DickieException("   try again! use \"/from\" and \"/to\" to indicate the duration of the event!");
-        }
-
-        if (fromIndex > toIndex) {
-            throw new DickieException("   invalid event format! use \"/from\" before \"/to\"!");
-        }
-
-        String taskName = input.substring("event".length(), fromIndex).trim();
-
-        if (taskName.isBlank()) {
-            throw new DickieException("   try again! enter the name of the event!");
-        }
-
-        String from = input.substring(fromIndex + "/from".length(), toIndex).trim();
-        String to = input.substring(toIndex + "/to".length()).trim();
-
-        try {
-            LocalDate.parse(from);
-            LocalDate.parse(to);
-        } catch (DateTimeParseException e) {
-            throw new DickieException("   try again! Event start and end time must be in YYYY-MM-DD format!");
-        }
+        validateDate(from,"   try again! Event dates must be in YYYY-MM-DD format!");
+        validateDate(to,"   try again! Event dates must be in YYYY-MM-DD format!");
 
         if (LocalDate.parse(from).isAfter(LocalDate.parse(to))) {
             throw new DickieException("   try again! event start date should be before end date!");
         }
 
-        if (from.isBlank() || to.isBlank()) {
-            throw new DickieException("   try again! event must have both start and end time!");
+        Priority priority = parsePriority(input, pIndex);
+        return new Event(name, from, to, priority);
+    }
+
+    /**
+     * Extracts and trims a substring between two indices.
+     *
+     * @param input Raw user input string
+     * @param startIndex Start index of the segment to extract
+     * @param endIndex End index of the segment to extract
+     * @param blankError Error message to throw if the extracted segment is blank
+     * @return Trimmed substring between the two indices
+     * @throws DickieException If the extracted segment is blank or the indices are invalid
+     */
+    private static String extractSegment(String input, int startIndex, int endIndex, String blankError)
+            throws DickieException {
+
+        if (startIndex >= endIndex) {
+            throw new DickieException("   invalid command format!");
         }
 
-        return new String[]{taskName, from, to};
+        String result = input.substring(startIndex, endIndex).trim();
+        if (result.isBlank()) {
+            throw new DickieException(blankError);
+        }
+        return result;
+    }
+
+    /**
+     * Ensures a marker exists in the input string and returns its index.
+     *
+     * @param input Raw user input string
+     * @param marker The marker substring to search for (e.g. "/p", "/by")
+     * @param errorMsg Error message to throw if the marker is not found
+     * @return Index of the marker within the input string
+     * @throws DickieException If the marker is not found in the input
+     */
+    private static int requireIndex(String input,
+                                    String marker,
+                                    String errorMsg)
+            throws DickieException {
+
+        int index = input.indexOf(marker);
+        if (index == -1) {
+            throw new DickieException(errorMsg);
+        }
+        return index;
+    }
+
+    /**
+     * Parses and validates the priority value from user input.
+     *
+     * @param input Raw user input string
+     * @param pIndex Index of the "/p" marker within the input
+     * @return The corresponding Priority enum value
+     * @throws DickieException If the priority field is blank or does not match LOW, MEDIUM, or HIGH
+     */
+    private static Priority parsePriority(String input, int pIndex)
+            throws DickieException {
+
+        String value = input.substring(pIndex + "/p".length())
+                .trim()
+                .toUpperCase();
+
+        if (value.isBlank()) {
+            throw new DickieException(
+                    "   indicate the priority! Example: LOW, MEDIUM or HIGH");
+        }
+
+        return switch (value) {
+            case "LOW" -> Priority.LOW;
+            case "MEDIUM" -> Priority.MEDIUM;
+            case "HIGH" -> Priority.HIGH;
+            default -> throw new DickieException(
+                    "   invalid priority syntax, try LOW, MEDIUM or HIGH!");
+        };
+    }
+
+    /**
+     * Validates that a date string follows the ISO format YYYY-MM-DD.
+     *
+     * @param date The date string to validate
+     * @param errorMsg Error message to throw if the date format is invalid
+     * @throws DickieException If the date string cannot be parsed as a valid ISO date
+     */
+    private static void validateDate(String date, String errorMsg)
+            throws DickieException {
+        try {
+            LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            throw new DickieException(errorMsg);
+        }
     }
 }
