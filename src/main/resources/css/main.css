@@ -27,7 +27,7 @@
 }
 
 .scroll-bar {
-    -fx-font-size: 20px;  /* Change width of scroll bar. */
+    -fx-font-size: 12px;  /* Change width of scroll bar. */
     -fx-background-color: main-color;
 }
 
