@@ -117,7 +117,6 @@ public class CommandParser {
      * @param noOfInputtedWords Number of words in input
      * @return True if format is in <word> <number> format, false otherwise
      */
-
     public static boolean isWordTaskNumberFormat(String[] splitInput, int noOfInputtedWords, int noOfTasks) {
         assert noOfInputtedWords >= 1 : "Input should be at least one word";
 

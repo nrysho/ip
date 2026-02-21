@@ -2,6 +2,7 @@ package dickie.utils;
 
 import dickie.task.Task;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +37,7 @@ public class TaskList {
      */
     public void addTask(Task task){
         taskList.add(task);
+        Collections.sort(taskList);
     }
 
     /**
@@ -93,8 +95,9 @@ public class TaskList {
      * @return ArrayList of tasks whose descriptions contain the keyword
      */
     public ArrayList<Task> find(String keyword) {
+        String lowerKeyword = keyword.toLowerCase();
         return taskList.stream()
-                .filter(task -> task.getDescription().contains(keyword))
+                .filter(task -> task.getDescription().toLowerCase().contains(lowerKeyword))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

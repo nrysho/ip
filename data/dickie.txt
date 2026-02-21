@@ -1,3 +1,5 @@
-T |   | buy apples
-E | X | break a leg | today | tomorrow
-D |   | cs2103 | 2026-02-20
+T |   | buy apples | HIGH
+D |   | cs2103t ip | 2026-02-23 | HIGH
+E | X | buy jacket | 2023-02-02 | 2023-02-03 | MEDIUM
+T | X | play guitar | MEDIUM
+E |   | cny reunion dinner | 2026-02-21 | 2026-02-22 | MEDIUM

@@ -5,22 +5,24 @@ package dickie.task;
  */
 public class Todo extends Task {
     /**
-     * Creates a new todo task with the given description.
+     * Creates a new todo task with the given description and priority, defaulting to not done.
      *
      * @param description Description of the todo task
+     * @param priority Priority level of the task
      */
-    public Todo(String description) {
-        super(description);
+    public Todo(String description, Priority priority) {
+        super(description, priority);
     }
 
     /**
-     * Creates a new todo task with the given description and specified isDone field
+     * Creates a new todo task with the given description, priority, and completion status.
      *
      * @param description Description of the todo task
-     * @param isDone Boolean on whether or not task is done
+     * @param priority Priority level of the task
+     * @param isDone Boolean of whether the task is done or not
      */
-    public Todo(String description, boolean isDone) {
-        super(description, isDone);
+    public Todo(String description, Priority priority, boolean isDone) {
+        super(description, priority, isDone);
     }
 
     /**
@@ -30,7 +32,7 @@ public class Todo extends Task {
      */
     @Override
     public String toString() {
-        return "[T]" + super.getStatusIcon() + " " + super.toString();
+        return "[T]" + super.getStatusIcon() + super.getPriorityString() + " " + super.toString();
     }
 
     /**
@@ -43,8 +45,9 @@ public class Todo extends Task {
     @Override
     public String toFileString() {
         // Format: "T | X | task detail"
-        return String.format("T | %s | %s",
+        return String.format("T | %s | %s | %s",
                 getFileStatusIcon(),
-                description);
+                description,
+                priority);
     }
 }
