@@ -94,7 +94,7 @@ class TaskFactoryTest {
                 () -> TaskFactory.createTodo("todo read book"));
 
         assertEquals(
-                "   try again! use \"/p\" to indicate the priority of this task!",
+                "try again! use \"/p\" to indicate the priority of this task!",
                 ex.getMessage());
     }
     // Validates: requireIndex detects missing /p marker
@@ -106,7 +106,7 @@ class TaskFactoryTest {
                         "deadline submit /p LOW /by 2026-03-01"));
 
         assertEquals(
-                "   invalid format! \"/by\" should come before \"/p\"!",
+                "invalid format! \"/by\" should come before \"/p\"!",
                 ex.getMessage());
     }
     // Validates: ordering constraint enforcement
@@ -118,7 +118,7 @@ class TaskFactoryTest {
                         "deadline submit /by 01-03-2026 /p LOW"));
 
         assertEquals(
-                "   try again! Deadline must be in YYYY-MM-DD format!",
+                "try again! Deadline must be in YYYY-MM-DD format!",
                 ex.getMessage());
     }
     // Validates: LocalDate.parse failure is correctly caught
@@ -130,7 +130,7 @@ class TaskFactoryTest {
                         "event trip /from 2026-03-05 /to 2026-03-01 /p LOW"));
 
         assertEquals(
-                "   try again! event start date should be before end date!",
+                "try again! event start date should be before end date!",
                 ex.getMessage());
     }
     // Validates: chronological validation logic
@@ -141,7 +141,7 @@ class TaskFactoryTest {
                 () -> TaskFactory.createTodo("todo   /p LOW"));
 
         assertEquals(
-                "   try again, no task indicated to do!",
+                "try again, no task indicated to do!",
                 ex.getMessage());
     }
     // Validates: extractSegment blank field detection
@@ -152,7 +152,7 @@ class TaskFactoryTest {
                 () -> TaskFactory.createTodo("todo read /p URGENT"));
 
         assertEquals(
-                "   invalid priority syntax, try LOW, MEDIUM or HIGH!",
+                "invalid priority syntax, try LOW, MEDIUM or HIGH!",
                 ex.getMessage());
     }
     // Validates: switch default case in parsePriority

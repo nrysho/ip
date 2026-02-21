@@ -26,7 +26,7 @@ public class MainWindow extends AnchorPane {
     private Dickie dickie;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image dickieImage = new Image(this.getClass().getResourceAsStream("/images/DaDickie.png"));
 
     /**
      * Initializes the main window.
@@ -56,7 +56,7 @@ public class MainWindow extends AnchorPane {
     public void showGreeting() {
         String greetingMessage = dickie.getGreeting();
         dialogContainer.getChildren().add(
-                DialogBox.getDickieDialog(greetingMessage, dukeImage)
+                DialogBox.getDickieDialog(greetingMessage, dickieImage)
         );
     }
 
@@ -71,7 +71,7 @@ public class MainWindow extends AnchorPane {
         String response = dickie.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDickieDialog(response, dukeImage)
+                DialogBox.getDickieDialog(response, dickieImage)
         );
         userInput.clear();
     }

@@ -10,7 +10,7 @@ public class StorageTest {
     @Test
     public void parseTask_invalidInput_exceptionThrown(){
         try {
-            String fileString = "X | T | homework";
+            String fileString = "X | T | homework | 2024-06-30 | LOW";
             Storage.parseTask(fileString);
             fail();
         } catch (DickieException e) {

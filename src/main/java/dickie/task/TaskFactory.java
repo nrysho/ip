@@ -24,13 +24,13 @@ public class TaskFactory {
      */
     public static Task createTodo(String input) throws DickieException {
         int pIndex = requireIndex(input, "/p",
-                         "   try again! use \"/p\" to indicate the priority of this task!");
+                         "try again! use \"/p\" to indicate the priority of this task!");
 
         String name = extractSegment(
                 input,
                 "todo".length(),
                 pIndex,
-                "   try again, no task indicated to do!"
+                "try again, no task indicated to do!"
         );
         Priority priority = parsePriority(input, pIndex);
         return new Todo(name, priority);
@@ -46,31 +46,31 @@ public class TaskFactory {
      */
     public static Task createDeadline(String input) throws DickieException {
         int byIndex = requireIndex(input, "/by",
-                          "   try again! use \"/by\" to indicate the deadline of this task!");
+                          "try again! use \"/by\" to indicate the deadline of this task!");
 
         int pIndex = requireIndex(input, "/p",
-                         "   try again! use \"/p\" to indicate the priority!");
+                         "try again! use \"/p\" to indicate the priority!");
 
         if (byIndex > pIndex) {
-            throw new DickieException("   invalid format! \"/by\" should come before \"/p\"!");
+            throw new DickieException("invalid format! \"/by\" should come before \"/p\"!");
         }
 
         String name = extractSegment(
                 input,
                 "deadline".length(),
                 byIndex,
-                "   try again, no task indicated to do!"
+                "try again, no task indicated to do!"
         );
 
         String deadline = extractSegment(
                 input,
                 byIndex + "/by".length(),
                 pIndex,
-                "   try again! enter a deadline date!"
+                "try again! enter a deadline date!"
         );
 
         validateDate(deadline,
-                "   try again! Deadline must be in YYYY-MM-DD format!");
+                "try again! Deadline must be in YYYY-MM-DD format!");
 
         Priority priority = parsePriority(input, pIndex);
         return new Deadline(name, deadline, priority);
@@ -87,44 +87,44 @@ public class TaskFactory {
      */
     public static Task createEvent(String input) throws DickieException {
         int fromIndex = requireIndex(input, "/from",
-                            "   try again! use \"/from\" to indicate the start of the event!");
+                            "try again! use \"/from\" to indicate the start of the event!");
 
         int toIndex = requireIndex(input, "/to",
-                          "   try again! use \"/to\" to indicate the end of the event!");
+                          "try again! use \"/to\" to indicate the end of the event!");
 
         int pIndex = requireIndex(input, "/p",
-                         "   try again! use \"/p\" to indicate the priority!");
+                         "try again! use \"/p\" to indicate the priority!");
 
         if (!(fromIndex < toIndex && toIndex < pIndex)) {
-            throw new DickieException("   invalid format! use \"/from\" before \"/to\" before \"/p\"!");
+            throw new DickieException("invalid format! use \"/from\" before \"/to\" before \"/p\"!");
         }
 
         String name = extractSegment(
                 input,
                 "event".length(),
                 fromIndex,
-                "   try again, no task indicated to do!"
+                "try again, no task indicated to do!"
         );
 
         String from = extractSegment(
                 input,
                 fromIndex + "/from".length(),
                 toIndex,
-                "   try again! enter an event start date!"
+                "try again! enter an event start date!"
         );
 
         String to = extractSegment(
                 input,
                 toIndex + "/to".length(),
                 pIndex,
-                "   try again! enter an event end date!"
+                "try again! enter an event end date!"
         );
 
-        validateDate(from,"   try again! Event dates must be in YYYY-MM-DD format!");
-        validateDate(to,"   try again! Event dates must be in YYYY-MM-DD format!");
+        validateDate(from, "try again! Event dates must be in YYYY-MM-DD format!");
+        validateDate(to,"try again! Event dates must be in YYYY-MM-DD format!");
 
         if (LocalDate.parse(from).isAfter(LocalDate.parse(to))) {
-            throw new DickieException("   try again! event start date should be before end date!");
+            throw new DickieException("try again! event start date should be before end date!");
         }
 
         Priority priority = parsePriority(input, pIndex);
@@ -145,7 +145,7 @@ public class TaskFactory {
             throws DickieException {
 
         if (startIndex >= endIndex) {
-            throw new DickieException("   invalid command format!");
+            throw new DickieException("invalid command format!");
         }
 
         String result = input.substring(startIndex, endIndex).trim();
@@ -193,7 +193,7 @@ public class TaskFactory {
 
         if (value.isBlank()) {
             throw new DickieException(
-                    "   indicate the priority! Example: LOW, MEDIUM or HIGH");
+                    "indicate the priority! Example: LOW, MEDIUM or HIGH");
         }
 
         return switch (value) {
@@ -201,7 +201,7 @@ public class TaskFactory {
             case "MEDIUM" -> Priority.MEDIUM;
             case "HIGH" -> Priority.HIGH;
             default -> throw new DickieException(
-                    "   invalid priority syntax, try LOW, MEDIUM or HIGH!");
+                    "invalid priority syntax, try LOW, MEDIUM or HIGH!");
         };
     }
 

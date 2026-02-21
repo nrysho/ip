@@ -24,7 +24,7 @@ class CommandParserTest {
 
     @Test
     void splitInput_trimsAndSplitsCorrectly() {
-        String[] result = CommandParser.splitInput("   mark   1   ");
+        String[] result = CommandParser.splitInput("mark   1   ");
         assertArrayEquals(new String[]{"mark", "1"}, result);
     }
 

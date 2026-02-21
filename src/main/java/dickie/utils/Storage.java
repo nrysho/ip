@@ -165,7 +165,7 @@ public class Storage {
             case "LOW" -> Priority.LOW;
             case "MEDIUM" -> Priority.MEDIUM;
             case "HIGH" -> Priority.HIGH;
-            default -> throw new DickieException("   invalid priority syntax");
+            default -> throw new DickieException("invalid priority syntax");
         };
     }
 

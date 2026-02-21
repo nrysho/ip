@@ -54,7 +54,7 @@ public class CommandParser {
         case ADDTASK:
             return handleAddTask(input, splitInput, taskList, ui);
         default:
-            throw new DickieException("   unknown command!");
+            throw new DickieException("unknown command!");
         }
     }
 
@@ -68,7 +68,7 @@ public class CommandParser {
      */
     public static CommandType getInputCommandType(String[] splitInput, int noOfTasks) throws DickieException {
         if (splitInput.length == 0 || splitInput[0].isBlank()) {
-            throw new DickieException("   empty input :( let me know how I can help!");
+            throw new DickieException("empty input :( let me know how I can help!");
         }
 
         int noOfInputtedWords = splitInput.length;
@@ -79,34 +79,34 @@ public class CommandParser {
             if (noOfInputtedWords == 1) {
                 return CommandType.LIST;
             } else {
-                throw new DickieException("   try simply typing \"list\" to list your tasks!");
+                throw new DickieException("try simply typing \"list\" to list your tasks!");
             }
         case "find":
             if (noOfInputtedWords != 1) {
                 return CommandType.FIND;
             } else {
-                throw new DickieException("   what task would you like me to find? try using the format \"find exampleTask\"!");
+                throw new DickieException("what task would you like me to find? try using the format \"find exampleTask\"!");
             }
         case "mark":
             if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
-               throw new DickieException("   try again, using the format \"mark <taskNumber>\"!");
+               throw new DickieException("try again, using the format \"mark <taskNumber>\"!");
             }
             return CommandType.MARK;
         case "unmark":
             if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
-                throw new DickieException("   try again, using the format \"unmark <taskNumber>\"!");
+                throw new DickieException("try again, using the format \"unmark <taskNumber>\"!");
             }
             return CommandType.UNMARK;
         case "delete":
             if (!isWordTaskNumberFormat(splitInput, noOfInputtedWords, noOfTasks)) {
-                throw new DickieException("   try again, using the format \"delete <taskNumber>\"!");
+                throw new DickieException("try again, using the format \"delete <taskNumber>\"!");
             }
             return CommandType.DELETE;
         case "deadline", "todo", "event":
             return CommandType.ADDTASK; // input format checked in TaskFactory
         default:
-            throw new DickieException("   invalid command type! try the following commands:\n" +
-                    "   list, find, mark, unmark, delete, deadline, todo, event :)");
+            throw new DickieException("invalid command type! try the following commands:\n" +
+                    "list, find, mark, unmark, delete, deadline, todo, event :)");
         }
     }
 
@@ -177,7 +177,7 @@ public class CommandParser {
             case "todo" -> TaskType.TODO;
             case "deadline" -> TaskType.DEADLINE;
             case "event" -> TaskType.EVENT;
-            default -> throw new DickieException("   invalid task type, try again! :)");
+            default -> throw new DickieException("invalid task type, try again! :)");
         };
     }
 }

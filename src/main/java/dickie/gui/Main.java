@@ -4,12 +4,10 @@ import java.io.IOException;
 
 import dickie.Dickie;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -18,7 +16,6 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private Dickie dickie = new Dickie();
-    private Image dickieImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
 
     @Override
     public void start(Stage stage) {
@@ -27,6 +24,10 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+
+            stage.setTitle("Dickie");
+            stage.setMinHeight(500);
+            stage.setMinWidth(417);
 
             MainWindow controller = fxmlLoader.<MainWindow>getController();
             controller.setDickie(dickie);  // inject the Dickie instance
