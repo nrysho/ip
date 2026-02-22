@@ -1,5 +1,6 @@
-T |   | buy apples | HIGH
+T | X | buy apples | HIGH
 D |   | cs2103t ip | 2026-02-23 | HIGH
+D |   | improve this app | 2026-02-22 | HIGH
 E | X | buy jacket | 2023-02-02 | 2023-02-03 | MEDIUM
-T | X | play guitar | MEDIUM
 E |   | cny reunion dinner | 2026-02-21 | 2026-02-22 | MEDIUM
+D |   | pack room | 2026-02-22 | LOW
