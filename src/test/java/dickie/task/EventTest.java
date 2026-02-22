@@ -10,12 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * AI-assisted: Used ChatGPT to systematically identify observable behaviours,
  * edge cases, and failure scenarios for the Event class.
  *
- * Generated behavioural test cases for:
- * - Constructor behaviour (default and explicit completion state)
- * - Date formatting logic in toString()
- * - File format output in toFileString()
- * - Invalid date parsing scenarios
- *
  * I reviewed and refined the generated tests to ensure:
  * - Only public behaviour is tested
  * - No private methods or implementation details are relied upon
