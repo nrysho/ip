@@ -17,11 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 // requirements , and ensured the tests reflect the implemented behaviour
 // without relying on internal details.
 class CommandParserTest {
-
-    // =========================
-    // splitInput Tests
-    // =========================
-
     @Test
     void splitInput_trimsAndSplitsCorrectly() {
         String[] result = CommandParser.splitInput("mark   1   ");
@@ -33,10 +28,6 @@ class CommandParserTest {
         String[] result = CommandParser.splitInput("list");
         assertArrayEquals(new String[]{"list"}, result);
     }
-
-    // =========================
-    // isValidTaskNumber Tests
-    // =========================
 
     @Test
     void isValidTaskNumber_validNumberWithinRange_returnsTrue() {
@@ -63,10 +54,6 @@ class CommandParserTest {
         assertFalse(CommandParser.isValidTaskNumber("5", 3));
     }
 
-    // =========================
-    // getTaskType Tests
-    // =========================
-
     @Test
     void getTaskType_validTodo_returnsTodoType() throws DickieException {
         assertEquals(TaskType.TODO,
@@ -78,10 +65,6 @@ class CommandParserTest {
         assertThrows(DickieException.class, () ->
                 CommandParser.getTaskType(new String[]{"invalid"}));
     }
-
-    // =========================
-    // getInputCommandType Tests
-    // =========================
 
     @Test
     void getInputCommandType_listValid_returnsList() throws DickieException {
@@ -112,10 +95,6 @@ class CommandParserTest {
         assertThrows(DickieException.class, () ->
                 CommandParser.getInputCommandType(new String[]{"hello"}, 0));
     }
-
-    // =========================
-    // handleInput Behaviour Tests
-    // =========================
 
     @Test
     void handleInput_list_returnsUiListOutput() throws DickieException {
