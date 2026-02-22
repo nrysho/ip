@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Expected outputs match the actual Task superclass behaviour
  */
 public class EventTest {
+
     @Test
     public void constructor_defaultIsDone_taskNotMarkedDone() {
         Event event = new Event(

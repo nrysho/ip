@@ -18,10 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TaskFactoryTest {
 
-    /* ============================================================
-       1. HAPPY PATH TESTS
-       ============================================================ */
-
     @Test
     void createTodo_validInput_success() throws DickieException {
         Task task = TaskFactory.createTodo("todo read book /p LOW");
@@ -39,7 +35,6 @@ class TaskFactoryTest {
         assertInstanceOf(Deadline.class, task);
         assertEquals("submit report", task.getDescription());
     }
-    // Validates: correct parsing of name, date and priority
 
     @Test
     void createEvent_validInput_success() throws DickieException {
@@ -49,12 +44,6 @@ class TaskFactoryTest {
         assertInstanceOf(Event.class, task);
         assertEquals("hackathon", task.getDescription());
     }
-    // Validates: correct parsing of event with valid chronological dates
-
-
-    /* ============================================================
-       2. EDGE CASE TESTS
-       ============================================================ */
 
     @Test
     void createTodo_priorityLowercase_parsedCorrectly() throws DickieException {
@@ -62,7 +51,6 @@ class TaskFactoryTest {
 
         assertInstanceOf(Todo.class, task);
     }
-    // Validates: priority parsing is case-insensitive (due to toUpperCase())
 
     @Test
     void createDeadline_extraSpaces_trimmedCorrectly() throws DickieException {
@@ -71,7 +59,6 @@ class TaskFactoryTest {
 
         assertEquals("submit", task.getDescription());
     }
-    // Validates: extractSegment trims whitespace correctly
 
     @Test
     void createEvent_sameStartAndEndDate_allowed() throws DickieException {
@@ -80,13 +67,6 @@ class TaskFactoryTest {
 
         assertInstanceOf(Event.class, task);
     }
-    // Validates: boundary where start == end is allowed
-    // (Only disallowed when start is AFTER end)
-
-
-    /* ============================================================
-       3. EXCEPTION TESTS
-       ============================================================ */
 
     @Test
     void createTodo_missingPriorityMarker_throwsException() {
@@ -97,7 +77,6 @@ class TaskFactoryTest {
                 "try again! use \"/p\" to indicate the priority of this task!",
                 ex.getMessage());
     }
-    // Validates: requireIndex detects missing /p marker
 
     @Test
     void createDeadline_wrongMarkerOrder_throwsException() {
@@ -109,7 +88,6 @@ class TaskFactoryTest {
                 "invalid format! \"/by\" should come before \"/p\"!",
                 ex.getMessage());
     }
-    // Validates: ordering constraint enforcement
 
     @Test
     void createDeadline_invalidDateFormat_throwsException() {
@@ -121,7 +99,6 @@ class TaskFactoryTest {
                 "try again! Deadline must be in YYYY-MM-DD format!",
                 ex.getMessage());
     }
-    // Validates: LocalDate.parse failure is correctly caught
 
     @Test
     void createEvent_startAfterEnd_throwsException() {
@@ -133,7 +110,6 @@ class TaskFactoryTest {
                 "try again! event start date should be before end date!",
                 ex.getMessage());
     }
-    // Validates: chronological validation logic
 
     @Test
     void createTodo_blankName_throwsException() {
@@ -144,7 +120,6 @@ class TaskFactoryTest {
                 "try again, no task indicated to do!",
                 ex.getMessage());
     }
-    // Validates: extractSegment blank field detection
 
     @Test
     void createTodo_invalidPriority_throwsException() {
@@ -155,12 +130,6 @@ class TaskFactoryTest {
                 "invalid priority syntax, try LOW, MEDIUM or HIGH!",
                 ex.getMessage());
     }
-    // Validates: switch default case in parsePriority
-
-
-    /* ============================================================
-       4. BOUNDARY TESTS
-       ============================================================ */
 
     @Test
     void createEvent_startOneDayBeforeEnd_success() throws DickieException {
@@ -169,7 +138,6 @@ class TaskFactoryTest {
 
         assertInstanceOf(Event.class, task);
     }
-    // Validates: minimal valid chronological difference
 
     @Test
     void createDeadline_minimalValidDate_success() throws DickieException {
@@ -178,7 +146,6 @@ class TaskFactoryTest {
 
         assertInstanceOf(Deadline.class, task);
     }
-    // Validates: LocalDate accepts earliest valid ISO date
 
     @Test
     void createTodo_priorityJustAfterMarker_success() throws DickieException {
@@ -186,5 +153,4 @@ class TaskFactoryTest {
 
         assertInstanceOf(Todo.class, task);
     }
-    // Validates: requireIndex works even without space before marker
 }

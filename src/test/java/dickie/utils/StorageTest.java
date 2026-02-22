@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class StorageTest {
+
     @Test
     public void parseTask_invalidInput_exceptionThrown(){
         try {

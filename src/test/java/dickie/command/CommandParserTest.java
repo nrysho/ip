@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // requirements , and ensured the tests reflect the implemented behaviour
 // without relying on internal details.
 class CommandParserTest {
+
     @Test
     void splitInput_trimsAndSplitsCorrectly() {
         String[] result = CommandParser.splitInput("mark   1   ");

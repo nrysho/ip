@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // Tests focus on observable behaviour only, avoiding private methods and implementation details.
 // All test cases were reviewed and adapted to align with the project architecture and JUnit 5 standards.
 public class DickieTest {
+
     @Test
     public void getGreeting_validCall_returnsNonNullGreeting() {
         Dickie dickie = new Dickie();
